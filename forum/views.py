@@ -54,3 +54,6 @@ def recent_questions(request):
     last_ten = QuestionPost.objects.order_by('created')[:10]
     last_ten_in_ascending_order = reversed(last_ten)
     return render(request, 'forum/recent_post.html', {'last_ten_in_ascending_order': last_ten_in_ascending_order})
+
+def register(request):
+    pass

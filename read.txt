@@ -1,0 +1,12 @@
+git clone https://github.com/tobycoder/exenv-forum
+pip install django==2.10.0
+pip install pillow
+
+"""
+change url
+H:\django_sample\exenv-forum\core\urls.py
+    url(r'^login/$', auth_views.LoginView, name='login'),
+"""
+
+python manage.py migrate
+python manage.py runserver
