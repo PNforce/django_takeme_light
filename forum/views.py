@@ -9,6 +9,7 @@ from django.core.files.base import ContentFile
 def get_index_page(request):
     return render(request, 'forum/home.html')
 
+#ask page
 def get_question(request):
     if request.method == 'POST':
         form = QuestionPostForm(request.POST, request.FILES)
@@ -21,7 +22,7 @@ def get_question(request):
 
     else:
         form = QuestionPostForm()
-    return render(request, 'forum/index.html', {'form': form})
+    return render(request, 'forum/ask.html', {'form': form})
 
 def get_the_text(request, question_url_id):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
@@ -54,6 +55,3 @@ def recent_questions(request):
     last_ten = QuestionPost.objects.order_by('created')[:10]
     last_ten_in_ascending_order = reversed(last_ten)
     return render(request, 'forum/recent_post.html', {'last_ten_in_ascending_order': last_ten_in_ascending_order})
-
-def register(request):
-    pass

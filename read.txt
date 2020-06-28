@@ -1,6 +1,9 @@
 git clone https://github.com/tobycoder/exenv-forum
+@cmd: virtualenv env
+@cmd: go to scripts folder , activate.bat
 pip install django==2.10.0
 pip install pillow
+pip install django-widget-tweaks
 
 """
 change url
@@ -8,5 +11,6 @@ H:\django_sample\exenv-forum\core\urls.py
     url(r'^login/$', auth_views.LoginView, name='login'),
 """
 
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver

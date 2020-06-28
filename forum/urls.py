@@ -23,6 +23,7 @@ from django.conf import settings
 admin.autodiscover()
 app_name = 'forum'
 urlpatterns = [
+
     url(r'^$', views.get_index_page, name='get_index_page'),
     url(r'^ask/$', views.get_question, name='get_question'),
     url(r'^recent/$', views.recent_questions, name='recent_questions'),

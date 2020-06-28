@@ -28,7 +28,7 @@ def login(request):
                 else:
                     return HttpResponse('Username incorrect')
             else:
-                return HttpResponse('Account niet geactiveerd!')
+                return HttpResponse('account not active 帳號未啟用，請檢察郵箱')
     else:
         form = Validate()
         return render(request, 'forum/login.html', context=locals())
@@ -40,7 +40,7 @@ def register(request):
         if form.is_valid():
             query = Registration.objects.filter(username__iexact=form.cleaned_data['username']).exists()
             if query == True:
-                return HttpResponse('Gebruikersnaam bestaat al')
+                return HttpResponse('Account name already exist 帳號已經存在')
             else:
                 form = form.save()
                 user_id = form.id
@@ -66,7 +66,7 @@ def checkpage(request):
     if request.session.has_key('username'):
         return HttpResponseRedirect(reverse('forum:get_index_page'))
     else:
-        return HttpResponse('Inloggen mislukt')
+        return HttpResponse('login fail登錄失敗')
 
 def activate(request, id, activation):
     exist = Registration.objects.filter(id=id, activate=activation).exists()
@@ -79,7 +79,7 @@ def activate(request, id, activation):
 def mail(request, user_id, email, activate):
     subject, from_email, to = 'Activatiecode Graffitiburners', 'noreply@graffitiburners.nl', email
     text_content = 'This is an important message.'
-    html_content = '<p>Leuk dat je je hebt geregistreerd bij Graffitiburners! Om zeker te weten dat jij bent wie je bent, sturen we deze activatiemail. Hieronder zie je een link, die je zal activeren als je er op klikt. Tot snel bij Graffitiburners!</p><br><a href="http://127.0.0.1:8000/forum/activate/{0}/{1}">Klik hier</a>'.format(user_id, activate)
+    html_content = '<p>收信並點啟用連結</p><br><a href="http://127.0.0.1:8000/forum/activate/{0}/{1}">Klik hier</a>'.format(user_id, activate)
     msg = EmailMultiAlternatives(subject, text_content, from_email, [email])
     msg.attach_alternative(html_content, "text/html")
     msg.send()

@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^forum/', include('forum.urls', namespace='forum')),
     url(r'^core/', include('core.urls')),
+    url(r'',  include('forum.urls', namespace='forum')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
