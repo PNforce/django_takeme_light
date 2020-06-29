@@ -4,12 +4,15 @@
     <tr>
         <th>物品名稱item name</th>
         <th>起始地點start loc.</th>
-        <th>收件地點start loc.</th>
+        <th>收件地點end loc.</th>
+        <th>Price運費</th>
+
     </tr>
     {% for item in query %}
     <tr>
         <td><a href="/forum/view/{{ item.id }}/"> {{ item.title }} </a></td>
-        <td>{{ item.tag }}</td>
+        <td>{{ form.startloc }}</td>
+        <td>{{ form.endloc }}</td>
     </tr>
     {% endfor %}
 </table>

@@ -19,20 +19,36 @@
         border: none;
         border-bottom: solid 1px black;
         }
+
+      #id_startloc {
+        height: 50px;
+        font-size: 40px;
+        border: none;
+        border-bottom: solid 1px black;
+        }
 </style>
 <div class="jumbotron" style="text-align: center;">
-    <h1>Ask your question</h1>
+    <h1>Send your requests 運送物品資訊</h1>
 </div>
     <div class="form-wrap">
         <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data">
             {% csrf_token %}
-            <label for="title">Title:</label><br>
+            <label for="title">item 物品名稱:</label><br>
             {{ form.title }}<br><br>
-            <label for="question">Question:</label><br>
-            {{ form.question }} <br><br>
-            <label for="tag">Tags:</label><br>
-            {{ form.tag }} <br><br>
-            <label for="file">File:</label><br>
+            <label for="startloc">start location 取件地點:</label><br>
+            {{ form.startloc }} <br><br>
+            <input type="text" name="startloc" maxlength="500" id="id_title"><br><br>
+            <label for="endloc">delivery location 收件地點:</label><br>
+            {{ form.endloc }} <br><br>
+            <label for="starttime">pickup time取件時間:</label><br>
+            {{ form.startloc }} <br><br>
+            <label for="endtime">delivery time最晚運送時間:</label><br>
+            {{ form.endloc }} <br><br>
+            <label for="desc">description 詳細敘述(包含體積重量):</label><br>
+            {{ form.desc }} <br><br>
+            <label for="Price">Price運費:</label><br>
+            {{ form.price }} <br><br>
+            <label for="file">item pic.物品圖片:</label><br>
             {{ form.file }} <br><br>
             <input class="btn btn-primary" type="submit" name="submit">
         </form>
