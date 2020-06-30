@@ -6,13 +6,13 @@ from django.dispatch import receiver
 text = 'defaulttext'
 class QuestionPost(models.Model):
     #question = models.TextField()
-    title = models.CharField(max_length=500, null=True, blank=True)
-    startloc = models.CharField(max_length=200)
-    endloc = models.CharField(max_length=200)
-    starttime = models.DateTimeField(auto_now_add=False)
-    endtime = models.DateTimeField(auto_now_add=False)
-    price = models.CharField(max_length=200)
-    desc = models.TextField()
+    title = models.CharField(max_length=64, null=True, blank=True)
+    startloc = models.CharField(max_length=64)
+    endloc = models.CharField(max_length=64)
+    starttime = models.CharField(max_length=64)
+    endtime = models.CharField(max_length=64)
+    price = models.CharField(max_length=20)
+    desc = models.TextField(max_length=200)
     file = models.ImageField()
     created = models.DateTimeField(auto_now_add=True)
 

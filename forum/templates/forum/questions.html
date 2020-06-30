@@ -3,23 +3,20 @@
 <table class="table table-hover">
     <tr>
         <th>物品名稱item name</th>
-
+        <th>起始地點start loc.</th>
+        <th>收件地點end loc.</th>
+        <th>截止時間endtime</th>
+        <th>price運費</th>
 
     </tr>
     {% for item in query %}
     <tr>
         <td><a href="/forum/view/{{ item.id }}/"> {{ item.title }} </a></td>
-
-        <!--
-                <th>起始地點start loc.</th>
-        <th>收件地點end loc.</th>
-        <th>截止時間endtime</th>
-        <th>price運費</th>
-
-                 <td>{{ form.startloc }}</td>
+        <td>{{ form.startloc }}</td>
         <td>{{ form.endloc }}</td>
         <td>{{ form.endtime }}</td>
         <td>{{ form.price }}</td>
+                <!--
          -->
     </tr>
     {% endfor %}

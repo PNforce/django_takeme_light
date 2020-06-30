@@ -9,7 +9,6 @@ from django.core.files.base import ContentFile
 def get_index_page(request):
     return render(request, 'forum/home.html')
 
-#ask page
 def get_question(request):
     if request.method == 'POST':
         print("request.POST")
@@ -21,6 +20,7 @@ def get_question(request):
         if form.is_valid():
             form = form.save()
             request_id = form.id
+            print(form.id)
             form.save()
             url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
@@ -28,6 +28,32 @@ def get_question(request):
     else:
         form = QuestionPostForm()
     return render(request, 'forum/ask.html', {'form': form})
+
+"""
+error still dont know why??
+def get_question(request):
+    form = QuestionPostForm()
+    if request.method == 'POST':
+        print("request.POST")
+        print(request.POST)
+        print("request.FILES")
+        print(request.FILES)
+        form = QuestionPostForm(request.POST, request.FILES)
+        form.id
+        #if form.is_valid():
+        print('form.is_valid()')
+        form = form.save()
+        request_id = form.id
+        form.save()
+        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+        return HttpResponseRedirect(url)
+    else:
+        form = QuestionPostForm()
+        print('no POST sucess')
+
+    return render(request, 'forum/ask.html', {'form': form})
+"""
+#ask page
 
 #connect with ask.html post
 #thank.html need to change
