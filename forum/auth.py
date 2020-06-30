@@ -75,15 +75,34 @@ def activate(request, id, activation):
         return render(request, 'forum/activated.html', context=locals())
     else:
         return HttpResponse('Downie')
-
+"""
 def mail(request, user_id, email, activate):
-    subject, from_email, to = 'Activatiecode Graffitiburners', 'noreply@graffitiburners.nl', email
+    subject, from_email, to = 'Active your account at TakeMeThere NET', 'patrick110413@gmail.com', email
     text_content = 'This is an important message.'
-    html_content = '<p>收信並點啟用連結</p><br><a href="http://127.0.0.1:8000/forum/activate/{0}/{1}">Klik hier</a>'.format(user_id, activate)
+    html_content = '<p>收信並點啟用連結</p><br><a href="http://127.0.0.1:8000/forum/activate/{0}/{1}">click here</a>'.format(user_id, activate)
     msg = EmailMultiAlternatives(subject, text_content, from_email, [email])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
     return HttpResponseRedirect('/forum/btdt/')
+"""
 
 def btdt(request):
     return render(request, 'forum/checkmail.html', context=locals())
+
+
+#def sendMail(subject, body, html, to_addr):
+def mail(request, user_id, email, activate) :
+    from email.mime.text import MIMEText
+    import smtplib
+    subject, from_addr, to_addr = 'Active your account at TakeMeThere NET', 'patrick110413@gmail.com', email
+    html = '<p>收信並點啟用連結</p><br><a href="http://127.0.0.1:8000/forum/activate/{0}/{1}">click here</a>'.format(user_id, activate)
+    mime: object = MIMEText(html, 'html', "utf-8")
+    mime["Subject"] = subject
+    mime["From"] = "PNforceStudio"
+    mime["To"] = ""
+    mime["Cc"] = ""
+    msg = mime.as_string()
+    smtpssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+    smtpssl.login("patrick110413@gmail.com", "vbsqufevjocaxbkg")
+    smtpssl.sendmail(from_addr, to_addr, msg, mail_options=(), rcpt_options=())
+    smtpssl.quit()

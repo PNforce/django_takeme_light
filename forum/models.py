@@ -14,6 +14,9 @@ class QuestionPost(models.Model):
     price = models.CharField(max_length=20)
     desc = models.TextField(max_length=200)
     file = models.ImageField()
+    state = models.CharField(max_length=20)
+    owner = models.CharField(max_length=20, null=True)
+    accepter = models.CharField(max_length=20, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):

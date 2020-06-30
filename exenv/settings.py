@@ -129,6 +129,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'forum/static/media')
 # Emailsettings to email customers
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'florisblog.com@gmail.com'
-EMAIL_HOST_PASSWORD = 'welcometoby'
-EMAIL_PORT = 587
+EMAIL_HOST_USER = 'patrick110413@gmail.com'
+
+EMAIL_HOST_PASSWORD = "vbsqufevjocaxbkg"
+#"vbsqufevjocaxbkg"
+EMAIL_PORT = 465
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
