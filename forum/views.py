@@ -12,6 +12,11 @@ def get_index_page(request):
 #ask page
 def get_question(request):
     if request.method == 'POST':
+        print("request.POST")
+        print(request.POST)
+
+        print("request.FILES")
+        print(request.FILES)
         form = QuestionPostForm(request.POST, request.FILES)
         if form.is_valid():
             form = form.save()
@@ -24,6 +29,8 @@ def get_question(request):
         form = QuestionPostForm()
     return render(request, 'forum/ask.html', {'form': form})
 
+#connect with ask.html post
+#thank.html need to change
 def get_the_text(request, question_url_id):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
     ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()

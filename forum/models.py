@@ -5,9 +5,14 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 text = 'defaulttext'
 class QuestionPost(models.Model):
-    question = models.TextField()
+    #question = models.TextField()
     title = models.CharField(max_length=500, null=True, blank=True)
-    tag = models.CharField(max_length=200)
+    startloc = models.CharField(max_length=200)
+    endloc = models.CharField(max_length=200)
+    starttime = models.DateTimeField(auto_now_add=False)
+    endtime = models.DateTimeField(auto_now_add=False)
+    price = models.CharField(max_length=200)
+    desc = models.TextField()
     file = models.ImageField()
     created = models.DateTimeField(auto_now_add=True)
 
