@@ -24,5 +24,11 @@ python manage.py runserver
 
 #註冊
 #smtp core 在auth.py, 設定在 setting
+#送出後到 checkmail.html
 #點確認信 連到 activate.html 內
 
+#案件總攬
+#在question.html
+
+#單獨案件
+#view.getthtext() and thank.html

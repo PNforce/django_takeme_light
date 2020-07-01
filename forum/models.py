@@ -6,17 +6,18 @@ from django.dispatch import receiver
 text = 'defaulttext'
 class QuestionPost(models.Model):
     #question = models.TextField()
-    title = models.CharField(max_length=64, null=True, blank=True)
-    startloc = models.CharField(max_length=64)
-    endloc = models.CharField(max_length=64)
-    starttime = models.CharField(max_length=64)
-    endtime = models.CharField(max_length=64)
-    price = models.CharField(max_length=20)
-    desc = models.TextField(max_length=200)
+    title = models.CharField(max_length=64, null=True)
+    startloc = models.CharField(max_length=64, null=True)
+    endloc = models.CharField(max_length=64, null=True)
+    starttime = models.DateField(null=True, blank=True)
+    endtime = models.DateField(null=True, blank=True)
+    price = models.CharField(max_length=20, null=True)
+    desc = models.TextField(max_length=300, null=True)
     file = models.ImageField()
-    state = models.CharField(max_length=20)
-    owner = models.CharField(max_length=20, null=True)
+    state = models.CharField(max_length=20, null=True)
+    username = models.CharField(max_length=20, null=True)
     accepter = models.CharField(max_length=20, null=True)
+    acceptmsg = models.CharField(max_length=200, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):

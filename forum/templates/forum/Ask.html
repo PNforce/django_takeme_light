@@ -13,18 +13,22 @@
      textarea {
         width: 100%;
         }
-      #id_title {
+
+      }
+</style>
+<div class="jumbotron" style="text-align: center;">
+    <h1>Send your requests 運送物品資訊</h1>
+</div>
+<!-- write form name at forms.py
+    #id_title {
         height: 50px;
         font-size: 40px;
         border: none;
         border-bottom: solid 1px black;
         }
-</style>
-<div class="jumbotron" style="text-align: center;">
-    <h1>Send your requests 運送物品資訊</h1>
-</div>
-<!-- write form name at forms.py-->
+-->
     <div class="form-wrap">
+        <a href="/forum/login/"><h4>{{msg}}</h4></a>
         <form action="" method="post" class="form form-horizontal" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="title">item 物品名稱:</label><br>

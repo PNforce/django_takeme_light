@@ -10,6 +10,7 @@
         max-width: 500px;
         }
 </style>
+<a href="/forum/login/"><h4>{{msg}}</h4></a>
 <table>
         {% for item in query %}
     <tr>
@@ -46,7 +47,7 @@
     </tr>
     <tr>
         <td>Owner: </td>
-        <th class="text-actually">wait function build</th>
+        <th class="text-actually">{{item.username}}</th>
     </tr>
     <tr>
         <td>Image: </td>

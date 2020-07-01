@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^all/$', views.QuestionOversight, name='QuestionOversight'),
     url(r'^view/(?P<question_url_id>[0-9]+)/$', views.get_the_text, name='get_the_text'),
     url(r'^view/(?P<question_url_id>[0-9]+)/comment/$', views.add_comment_to_post, name='add_comment_to_post'),
+    url(r'^view/(?P<question_url_id>[0-9]+)/accepttask/$', views.accepttask, name='accepttask'),
     url(r'^login/$', auth.login, name='login'),
     url(r'^register/$', auth.register, name='register'),
     url(r'^logout/$', auth.logout, name='logout'),

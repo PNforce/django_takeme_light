@@ -83,7 +83,7 @@ def mail(request, user_id, email, activate):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [email])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
-    return HttpResponseRedirect('/forum/btdt/')
+    
 """
 
 def btdt(request):
@@ -94,6 +94,7 @@ def btdt(request):
 def mail(request, user_id, email, activate) :
     from email.mime.text import MIMEText
     import smtplib
+    print('now sending mail...')
     subject, from_addr, to_addr = 'Active your account at TakeMeThere NET', 'patrick110413@gmail.com', email
     html = '<p>收信並點啟用連結</p><br><a href="http://127.0.0.1:8000/forum/activate/{0}/{1}">click here</a>'.format(user_id, activate)
     mime: object = MIMEText(html, 'html', "utf-8")
@@ -106,3 +107,4 @@ def mail(request, user_id, email, activate) :
     smtpssl.login("patrick110413@gmail.com", "vbsqufevjocaxbkg")
     smtpssl.sendmail(from_addr, to_addr, msg, mail_options=(), rcpt_options=())
     smtpssl.quit()
+    return HttpResponseRedirect('/forum/btdt/')
