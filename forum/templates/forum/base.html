@@ -4,7 +4,7 @@
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">    <link href="{% static 'css/heroic-features.css' %}" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Welcome to Exenv</title>
+    <title>Welcome to TakeMeThere 物品託帶網  by Patrick Hsieh</title>
     <style>
         body {
             margin: 0;
@@ -19,14 +19,14 @@
           <a class="navbar-brand" href="/forum">TakeMeThere</a>
         </div>
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/forum/">Home</a></li>
+          <li class="active"><a href="/forum/">Home 首頁</a></li>
           {% block nav-forum %}<li><a href="/forum/ask">send item 送件</a></li>{% endblock %}
           {% block nav-answer%}<li><a href="/forum/all">delivery item 運件</a></li>{% endblock %}
-            <li><a href="/register/">sign-up</a></li>
+            <li><a href="/register/">sign-up 註冊</a></li>
           {% if request.session.username %}
             <li><a href="/forum/logout">Logout</a></li>
             {% else %}
-            <li><a href="/forum/login">Login</a></li>
+            <li><a href="/forum/login">Login 登入</a></li>
             {% endif %}
         </ul>
       </div>
@@ -42,4 +42,6 @@
 {% block formcomment %}
 {% endblock %}
 {% block loginview %}
+{% endblock %}
+{% block task_accept %}
 {% endblock %}

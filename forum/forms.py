@@ -1,7 +1,9 @@
 from django import forms
 from .models import Comment, QuestionPost, Registration
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+#from django.contrib.auth.forms import UserCreationForm
+#from django.contrib.auth.models import User
 #Create your models here.
 
 class DateInput(forms.DateInput):
@@ -46,4 +48,4 @@ class Register(forms.ModelForm):
 class AddAcceptor(forms.ModelForm):
     class Meta:
         model = QuestionPost
-        fields = ('accepter','acceptmsg','state')
+        fields = ('acceptmsg',)

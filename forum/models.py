@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 text = 'defaulttext'
 class QuestionPost(models.Model):
-    #question = models.TextField()
     title = models.CharField(max_length=64, null=True)
     startloc = models.CharField(max_length=64, null=True)
     endloc = models.CharField(max_length=64, null=True)

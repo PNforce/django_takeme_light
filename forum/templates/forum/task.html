@@ -55,13 +55,10 @@
     </tr>
 </table>
 <br>
-      <form action = "/accept" method="POST">
-        <p><button name="bt_accepttask" type="submit">確認接案 accept task</button></p>
-    </form>
-
-
-<a class="btn btn-default" href="{% url 'forum:add_comment_to_post' question_url_id=item.id %}">Add comment</a>
-    {% endfor %}
+<a class="btn btn-default" href="{% url 'forum:add_comment_to_post' question_url_id=item.id %}">留言 Add comment</a>
+<br>
+<a class="btn btn-default" href="{% url 'forum:accept_task' question_url_id=item.id %}">接收委託 accept task</a>
+{% endfor %}
 <hr>
         {% for comment in querytwo %}
     <div class="comment">
@@ -70,5 +67,14 @@
         <p>{{ comment.text }}</p>
     </div>
         {% endfor %}
+<!--
+        <data name="data_accpetorid" value=item.id></data>>
 
+            <form action = "/accepttask/" method="POST">
+        {% csrf_token %}
+        <data name="item_id" value= item.id></data>
+        <data name="item_title" value= item.title></data>
+        <p><button name="bt_accepttask" type="submit">確認接案 accept task</button></p>
+    </form>
+-->
 {% endblock %}

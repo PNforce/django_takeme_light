@@ -22,6 +22,15 @@ python manage.py runserver
 #makemigrations 下一層資料夾， 例如 python manage.py makegigrations forum
 #forms.py 增加收資料的變數，model.py 內跟著改
 
+html:
+#使用base.html為基礎，各網頁延伸 extend然後，{block ""} {end block 放到對應地方}
+#說明  https://www.cnblogs.com/ajianbeyourself/p/4937951.html
+#bk:<a class="btn btn-default" href="{% url 'forum:accepttask' question_url_id=item.id acceptor_id=se%}">確認接案 accept task</a>
+
+#form
+#表單update, delete
+#https://dotblogs.com.tw/kevinya/2018/08/07/152924
+
 #註冊
 #smtp core 在auth.py, 設定在 setting
 #送出後到 checkmail.html

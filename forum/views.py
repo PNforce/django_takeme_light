@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponseRedirect
-from .forms import QuestionPostForm, CommentForm,AddAcceptor
+from .forms import QuestionPostForm, CommentForm, AddAcceptor
 from .models import QuestionPost, Comment
 from django.http.request import QueryDict
 from django.utils import timezone
@@ -19,13 +19,7 @@ def get_question(request):
 
         print("request.FILES")
         print(request.FILES)
-        """
-        login_state = 0
-        if 'username' in request.session:
-            print('in')
-            login_state = 0 + int(len(request.session['username']))
 
-        """
         if 'username' in request.session:
             print('IM in')
             username = str(request.session['username'])
@@ -97,19 +91,63 @@ def recent_questions(request):
     return render(request, 'forum/recent_post.html', {'last_ten_in_ascending_order': last_ten_in_ascending_order})
 
 def accepttask(request):
+    username = ''
+    if request.method == 'POST':
+        print(print(request.POST))
+        if 'username' in request.session:
+            print('IM in')
+            username = str(request.session['username'])
+    return render(request, 'forum/ask.html', {'msg': username})
+
+#url link and call django.form
+def accept_task(request, question_url_id):
+    instance = get_object_or_404(QuestionPost, pk=question_url_id)
+    state = "processing"
+    form = AddAcceptor()
+    request_id = question_url_id
+    if request.method == "POST":
+        print(request.POST)
+        accepter = str(request.session['username'])
+        state = "processing"
+        request.POST._mutable = True  # need change to mutable
+        QueryDict_accept = request.POST
+        QueryDict_accept.update({'accepter': accepter,'state': state})
+        form = QuestionPost(QueryDict_accept)
+        if form.is_valid():
+            accept = form.save(commit=False)
+            accept = accept.instance
+            accept.save()
+            url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+            return HttpResponseRedirect(url)
+    else:
+        form = AddAcceptor()
+        request_id = question_url_id
+
+    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
+
+    #post = get_object_or_404(QuestionPost, pk=question_url_id)
+    #return render(request, 'forum/questions.html', {'query': post})
+    """
+    request_id = question_url_id
     if request.method == "POST":
         if 'username' in request.session:
             print('u can accept')
             username = str(request.session['username'])
             request.POST._mutable = True  # need change to mutable
             QueryDict_acc = request.POST
-            state = "processing進行中"
+            
             QueryDict_acc.update({'username': username,'state': state,'acceptmsg':''})
             form = AddAcceptor(QueryDict_acc)
-            checkformvaildandsave(form)
+            if form.is_valid():
+                form = form.save()
+                request_id = form.id
+                form.save()
+                url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+                return HttpResponseRedirect(url)
         else:
             msg ='請先登入 login first please'
             print('login first')
             return render(request, 'forum/task.html', {'msg': msg})
 
-    #return render(request, 'forum/questions.html', {'query': query})
+    return render(request, 'forum/questions.html', {'query': query})
+    """
