@@ -90,17 +90,58 @@ def recent_questions(request):
     last_ten_in_ascending_order = reversed(last_ten)
     return render(request, 'forum/recent_post.html', {'last_ten_in_ascending_order': last_ten_in_ascending_order})
 
-def accepttask(request):
-    username = ''
-    if request.method == 'POST':
-        print(print(request.POST))
-        if 'username' in request.session:
-            print('IM in')
-            username = str(request.session['username'])
-    return render(request, 'forum/ask.html', {'msg': username})
+##common func:
+def update_db(**kwargs):
+    model_name = kwargs['model_name']
+    id = kwargs['id']
+    form_update = model_name.objects.filter(id=id).first()
+    list_keys = kwargs.keys()
+    for key in list_keys:
+        if key !='id' or 'model_name':
+            form_update.key = kwargs[str(key)]
+    form_update.save()
 
 #url link and call django.form
 def accept_task(request, question_url_id):
+    state = "processing"
+    form = AddAcceptor()
+    request_id = question_url_id
+    if request.method == "POST":
+        #ORM operate
+        content = {
+            'id': question_url_id,
+            'model_name': QuestionPost,
+            'accepter': str(request.session['username']),
+            'state' : "processing",
+            'acceptmsg': request.POST['acceptmsg']
+        }
+        update_db(**content)
+        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+        return HttpResponseRedirect(url)
+    else:
+        pass
+    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
+
+def accept_task(request, question_url_id):
+    state = "processing"
+    form = AddAcceptor()
+    request_id = question_url_id
+    if request.method == "POST":
+        state = "processing"
+        #ORM operate
+        form_update = QuestionPost.objects.filter(id=question_url_id).first()
+        form_update.accepter = str(request.session['username'])
+        form_update.state = "processing"
+        form_update.acceptmsg = request.POST['acceptmsg']
+        form_update.save()
+        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+        return HttpResponseRedirect(url)
+    else:
+        pass
+    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
+
+##back up wait for delete func:
+def bk_accept_task2(request, question_url_id):
     instance = get_object_or_404(QuestionPost, pk=question_url_id)
     state = "processing"
     form = AddAcceptor()
@@ -125,29 +166,11 @@ def accept_task(request, question_url_id):
 
     return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
 
-    #post = get_object_or_404(QuestionPost, pk=question_url_id)
-    #return render(request, 'forum/questions.html', {'query': post})
-    """
-    request_id = question_url_id
-    if request.method == "POST":
+def accepttask(request):
+    username = ''
+    if request.method == 'POST':
+        print(print(request.POST))
         if 'username' in request.session:
-            print('u can accept')
+            print('IM in')
             username = str(request.session['username'])
-            request.POST._mutable = True  # need change to mutable
-            QueryDict_acc = request.POST
-            
-            QueryDict_acc.update({'username': username,'state': state,'acceptmsg':''})
-            form = AddAcceptor(QueryDict_acc)
-            if form.is_valid():
-                form = form.save()
-                request_id = form.id
-                form.save()
-                url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
-                return HttpResponseRedirect(url)
-        else:
-            msg ='請先登入 login first please'
-            print('login first')
-            return render(request, 'forum/task.html', {'msg': msg})
-
-    return render(request, 'forum/questions.html', {'query': query})
-    """
+    return render(request, 'forum/ask.html', {'msg': username})
