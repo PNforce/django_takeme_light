@@ -55,9 +55,7 @@ def checkformvaildandsave(form):
     else:
         print('is_valid() failed')
 
-#ask page
-#connect with ask.html post
-#task.html need to change
+#task page
 def get_the_text(request, question_url_id):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
     ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
@@ -68,6 +66,7 @@ def QuestionOversight(request):
     query = QuestionPost.objects.all()
     return render(request, 'forum/questions.html', {'query': query})
 
+#on the task page
 def add_comment_to_post(request, question_url_id):
     post = get_object_or_404(QuestionPost, pk=question_url_id)
     form = CommentForm()
@@ -90,7 +89,7 @@ def recent_questions(request):
     last_ten_in_ascending_order = reversed(last_ten)
     return render(request, 'forum/recent_post.html', {'last_ten_in_ascending_order': last_ten_in_ascending_order})
 
-##common func:
+#for accept task func:
 def update_db(**kwargs):
     model_name = kwargs['model_name']
     id = kwargs['id']
@@ -101,76 +100,48 @@ def update_db(**kwargs):
             form_update.key = kwargs[str(key)]
     form_update.save()
 
-#url link and call django.form
-def accept_task(request, question_url_id):
-    state = "processing"
-    form = AddAcceptor()
-    request_id = question_url_id
-    if request.method == "POST":
-        #ORM operate
-        content = {
-            'id': question_url_id,
-            'model_name': QuestionPost,
-            'accepter': str(request.session['username']),
-            'state' : "processing",
-            'acceptmsg': request.POST['acceptmsg']
-        }
-        update_db(**content)
-        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
-        return HttpResponseRedirect(url)
+#control the auth of CRUD actions
+def is_sameperson_bool(request, question_url_id):
+    # accepter ==user?
+    db_username = QuestionPost.objects.filter(pk=question_url_id).values("username")
+    a = list(db_username)
+    if str(request.session['username']) == a[0]['username']:
+        result = True
     else:
-        pass
-    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
-
+        result = False
+    return result
+#task/accept_task
 def accept_task(request, question_url_id):
-    state = "processing"
+    msg, bt_display ='', 'hidden'
     form = AddAcceptor()
+    print('second def')
     request_id = question_url_id
-    if request.method == "POST":
-        state = "processing"
-        #ORM operate
-        form_update = QuestionPost.objects.filter(id=question_url_id).first()
-        form_update.accepter = str(request.session['username'])
-        form_update.state = "processing"
-        form_update.acceptmsg = request.POST['acceptmsg']
-        form_update.save()
-        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
-        return HttpResponseRedirect(url)
-    else:
-        pass
-    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
-
-##back up wait for delete func:
-def bk_accept_task2(request, question_url_id):
-    instance = get_object_or_404(QuestionPost, pk=question_url_id)
-    state = "processing"
-    form = AddAcceptor()
-    request_id = question_url_id
-    if request.method == "POST":
-        print(request.POST)
-        accepter = str(request.session['username'])
-        state = "processing"
-        request.POST._mutable = True  # need change to mutable
-        QueryDict_accept = request.POST
-        QueryDict_accept.update({'accepter': accepter,'state': state})
-        form = QuestionPost(QueryDict_accept)
-        if form.is_valid():
-            accept = form.save(commit=False)
-            accept = accept.instance
-            accept.save()
+    if is_sameperson_bool(request, question_url_id)==False:
+        bt_display = "visible"
+        if request.method == "POST":
+            #ORM operate
+            form_update = QuestionPost.objects.filter(id=question_url_id).first()
+            form_update.accepter = str(request.session['username'])
+            form_update.state = "待確認wait confirm"
+            form_update.acceptmsg = request.POST['acceptmsg']
+            form_update.save()
             url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
     else:
-        form = AddAcceptor()
-        request_id = question_url_id
+        msg = "You can't accept your own request 無法接受自己發出的提案"
+        bt_display = "hidden"
+        #等待增加跳出禁止葉面或轉跳
+        #return HttpResponseRedirect(url)
+    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': '', 'bt_display': bt_display, 'msg':msg})
 
-    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': ''})
+def delete_task(request, question_url_id):
+    task = QuestionPost.objects.filter(id=question_url_id)
+    task.delete()
+    query = QuestionPost.objects.all()
+    return render(request, 'forum/questions.html', {'query': query})
 
-def accepttask(request):
-    username = ''
-    if request.method == 'POST':
-        print(print(request.POST))
-        if 'username' in request.session:
-            print('IM in')
-            username = str(request.session['username'])
-    return render(request, 'forum/ask.html', {'msg': username})
+def modify_task(request, question_url_id):
+    pass
+
+def confirm_task(request, question_url_id):
+    pass

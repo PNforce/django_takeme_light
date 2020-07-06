@@ -10,7 +10,6 @@
         <th>案件狀態state</th>
         <th>接案人accepter</th>
         <th>我要接案get mission</th>
-
     </tr>
     {% for item in query %}
     <tr>
@@ -21,7 +20,7 @@
         <td><a> {{ item.price }} </a></td>
         <td><a> {{ item.state }} </a></td>
         <td><a> {{ item.accepter }} </a></td>
-        <td><a href="/forum/view/{{ item.id }}/"> 詳細資料detail </a></td>
+        <td><a href="/forum/view/{{ item.id }}/"> 詳細</a>/<a href="/forum/view/{{ item.id }}/delete/">刪</a></td>
     </tr>
     {% endfor %}
 </table>

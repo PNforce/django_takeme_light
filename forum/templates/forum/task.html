@@ -13,28 +13,29 @@
 <a href="/forum/login/"><h4>{{msg}}</h4></a>
 <table>
         {% for item in query %}
+
     <tr>
         <td>Date: </td>
         <td class="text-actually">{{ item.created }}</td>
     </tr>
     <tr>
-        <td>Title: </td>
+        <td>名稱Title: </td>
         <th class="text-actually">{{ item.title }}</th>
     </tr>
     <tr>
-        <td>startloc: </td>
+        <td>收件點startloc: </td>
         <th class="text-actually">{{ item.startloc }}</th>
     </tr>
     <tr>
-        <td>endloc: </td>
+        <td>送貨點endloc: </td>
         <th class="text-actually">{{ item.endloc }}</th>
     </tr>
     <tr>
-        <td>starttime: </td>
+        <td>開始時間starttime: </td>
         <th class="text-actually">{{ item.starttime }}</th>
     </tr>
     <tr>
-        <td>endtime: </td>
+        <td>結束時間endtime: </td>
         <th class="text-actually">{{ item.endtime }}</th>
     </tr>
     <tr>
@@ -46,18 +47,23 @@
         <th class="text-actually">{{ item.desc }}</th>
     </tr>
     <tr>
-        <td>Owner: </td>
+        <td>委託者Owner: </td>
         <th class="text-actually">{{item.username}}</th>
     </tr>
     <tr>
-        <td>Image: </td>
+        <td>接案者Accepter: </td>
+        <th class="text-actually">{{item.Accepter}}</th>
+    </tr>
+    <tr>
+        <td>圖片Image: </td>
         <td><img class="img-uploaded" src="/static/media/{{ item.file }}"></td>
     </tr>
 </table>
 <br>
 <a class="btn btn-default" href="{% url 'forum:add_comment_to_post' question_url_id=item.id %}">留言 Add comment</a>
 <br>
-<a class="btn btn-default" href="{% url 'forum:accept_task' question_url_id=item.id %}">接收委託 accept task</a>
+<a class="btn btn-default" id="bt_accept" href="{% url 'forum:accept_task' question_url_id=item.id %}">接收委託 accept task</a>
+
 {% endfor %}
 <hr>
         {% for comment in querytwo %}
@@ -67,6 +73,7 @@
         <p>{{ comment.text }}</p>
     </div>
         {% endfor %}
+
 <!--
         <data name="data_accpetorid" value=item.id></data>>
 

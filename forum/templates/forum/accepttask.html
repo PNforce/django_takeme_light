@@ -6,6 +6,21 @@
         {% csrf_token %}
         <label for="username">your name : {{request.session.username}}</label><br>
         {{form.as_p}}
-        <button type="submit" class="save btn btn-default">accept 確認</button>
+        <h3>{{msg}}</h3>
+        <button type="submit" id="bt_accept" class="save btn btn-default">accept 確認</button>
     </form>
+
+<script>
+    function visibilityHideUI()
+    {
+        var ui =document.getElementById("bt_accept");
+        ui.style.visibility={{bt_display}};
+    }
+    function visibilityShowUI()
+    {
+        var ui =document.getElementById("bt_accept");
+        ui.style.visibility={{bt_display}};
+    }
+</script>
+
 {% endblock %}
