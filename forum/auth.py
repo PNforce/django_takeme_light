@@ -33,6 +33,11 @@ def login(request):
         form = Validate()
         return render(request, 'forum/login.html', context=locals())
 
+#for register
+def is_alreay_registe(db, user_id):
+    result = False
+    return result
+
 def register(request):
     if request.method == 'POST':
         key = get_random_string(length=32)

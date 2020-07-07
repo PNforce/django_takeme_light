@@ -25,7 +25,7 @@ app_name = 'forum'
 urlpatterns = [
 
     url(r'^$', views.get_index_page, name='get_index_page'),
-    url(r'^ask/$', views.get_question, name='get_question'),
+    url(r'^get_task/$', views.get_task, name='get_task'),
     url(r'^recent/$', views.recent_questions, name='recent_questions'),
     url(r'^all/$', views.QuestionOversight, name='QuestionOversight'),
     url(r'^view/(?P<question_url_id>[0-9]+)/$', views.get_the_text, name='get_the_text'),
@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^view/(?P<question_url_id>[0-9]+)/delete/$', views.delete_task, name='delete_task'),
     url(r'^view/(?P<question_url_id>[0-9]+)/modify/$', views.modify_task, name='modify_task'),
     url(r'^view/(?P<question_url_id>[0-9]+)/confirm/$', views.confirm_task, name='confirm_task'),
+    url(r'^my_tasks/$', views.my_tasks, name='my_tasks'),
     url(r'^login/$', auth.login, name='login'),
     url(r'^register/$', auth.register, name='register'),
     url(r'^logout/$', auth.logout, name='logout'),

@@ -16,12 +16,12 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/forum">TakeMeThere</a>
         </div>
         <ul class="nav navbar-nav">
           <li class="active"><a href="/forum/">Home 首頁</a></li>
-          {% block nav-forum %}<li><a href="/forum/ask">send item 送件</a></li>{% endblock %}
+          {% block nav-forum %}<li><a href="/forum/get_task">send item 送件</a></li>{% endblock %}
           {% block nav-answer%}<li><a href="/forum/all">delivery item 運件</a></li>{% endblock %}
+            <li><a href="/forum/my_tasks">我的案件MyTasks</a></li>
             <li><a href="/register/">sign-up 註冊</a></li>
           {% if request.session.username %}
             <li><a href="/forum/logout">Logout</a></li>

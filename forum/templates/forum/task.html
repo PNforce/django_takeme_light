@@ -13,7 +13,6 @@
 <a href="/forum/login/"><h4>{{msg}}</h4></a>
 <table>
         {% for item in query %}
-
     <tr>
         <td>Date: </td>
         <td class="text-actually">{{ item.created }}</td>
@@ -76,7 +75,6 @@
 
 <!--
         <data name="data_accpetorid" value=item.id></data>>
-
             <form action = "/accepttask/" method="POST">
         {% csrf_token %}
         <data name="item_id" value= item.id></data>

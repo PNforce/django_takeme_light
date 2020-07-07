@@ -10,7 +10,7 @@ from django.core.files.base import ContentFile
 def get_index_page(request):
     return render(request, 'forum/home.html')
 
-def get_question(request):
+def get_task(request):
     msg, username ='', ''
     QueryDict_ask = QueryDict('', mutable=True)
     if request.method == 'POST':
@@ -19,7 +19,6 @@ def get_question(request):
 
         print("request.FILES")
         print(request.FILES)
-
         if 'username' in request.session:
             print('IM in')
             username = str(request.session['username'])
@@ -30,7 +29,7 @@ def get_question(request):
         else:
             msg ='請先登入 login first please'
             print('login first')
-            return render(request, 'forum/ask.html', {'msg': msg})
+            return render(request, 'forum/get_task.html', {'msg': msg})
 
         if form.is_valid():
             form = form.save()
@@ -43,7 +42,7 @@ def get_question(request):
     else:
         print('provide form')
         form = QuestionPostForm()
-    return render(request, 'forum/ask.html', {'form': form})
+    return render(request, 'forum/get_task.html', {'form': form})
 
 def checkformvaildandsave(form):
     if form.is_valid():
@@ -107,18 +106,20 @@ def is_sameperson_bool(request, question_url_id):
     a = list(db_username)
     if str(request.session['username']) == a[0]['username']:
         result = True
+        print('same person')
     else:
         result = False
+        print('not person')
     return result
+
 #task/accept_task
 def accept_task(request, question_url_id):
     msg, bt_display ='', 'hidden'
     form = AddAcceptor()
-    print('second def')
     request_id = question_url_id
-    if is_sameperson_bool(request, question_url_id)==False:
-        bt_display = "visible"
-        if request.method == "POST":
+    if request.method == "POST":
+        if is_sameperson_bool(request, question_url_id)==False:
+            bt_display = "visible"
             #ORM operate
             form_update = QuestionPost.objects.filter(id=question_url_id).first()
             form_update.accepter = str(request.session['username'])
@@ -127,21 +128,41 @@ def accept_task(request, question_url_id):
             form_update.save()
             url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
-    else:
-        msg = "You can't accept your own request 無法接受自己發出的提案"
-        bt_display = "hidden"
-        #等待增加跳出禁止葉面或轉跳
-        #return HttpResponseRedirect(url)
+        else:
+            msg = "You can't accept your own request 無法接受自己發出的提案，請重新選擇please click delivery item "
+            bt_display = "hidden"
+            form = ''
+            print('forbidden same person')
     return render(request, 'forum/accepttask.html', {'form': form, 'request_id': '', 'bt_display': bt_display, 'msg':msg})
 
 def delete_task(request, question_url_id):
-    task = QuestionPost.objects.filter(id=question_url_id)
-    task.delete()
+    msg = ''
     query = QuestionPost.objects.all()
-    return render(request, 'forum/questions.html', {'query': query})
+    if is_sameperson_bool(request, question_url_id) == True:
+        task = QuestionPost.objects.filter(id=question_url_id)
+        task.delete()
+    else:
+        msg = 'Only delete your own task 無法刪除別人的委託'
+    return render(request, 'forum/questions.html', {'query': query, 'msg': msg})
 
 def modify_task(request, question_url_id):
-    pass
+    msg = ''
+    query = QuestionPost.objects.all()
+    if is_sameperson_bool(request, question_url_id) == True:
+        msg = '改'
+    else:
+        msg = 'Only modify your own task 無法更改別人的委託'
+    return render(request, 'forum/questions.html', {'query': query, 'msg': msg})
+    #return render(request, 'forum/questions.html', {'query': query})
 
 def confirm_task(request, question_url_id):
     pass
+
+def my_tasks(request):
+    query, msg = '', ''
+    if 'username' in request.session:
+        username =str(request.session['username'])
+        query = QuestionPost.objects.filter(username=username)
+    else:
+        msg = '請先登入 please login first'
+    return render(request, 'forum/my_tasks.html', {'query': query, 'msg':msg})
