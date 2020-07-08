@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b8804bd0-8475-4d9f-87b7-8ec4a27a2cea" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/forum/templates/forum/task_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/forum/templates/forum/my_responsible_tasks.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forum/templates/forum/accepttask.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/task_accept.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forum/templates/forum/AllTasks.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/AllTasks.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/forum/templates/forum/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forum/templates/forum/my_tasks.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forum/templates/forum/questions.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/AllTasks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forum/templates/forum/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/forum/templates/forum/task_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/forum/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/forum/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/forum/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/forum/views.py" afterDir="false" />
     </list>
@@ -24,19 +24,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html">
+        <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
+            <state relative-caret-position="1464">
+              <caret line="61" column="94" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="94" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/templates/forum/checkmail.html">
+        <entry file="file://$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="56">
-              <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+            <state relative-caret-position="24">
+              <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -51,48 +51,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="29" column="19" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_confirm.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
+            <state relative-caret-position="528">
               <caret line="22" column="11" lean-forward="true" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="11" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/admin.py">
+        <entry file="file://$PROJECT_DIR$/forum/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="288">
+              <caret line="39" column="102" selection-start-line="39" selection-start-column="89" selection-end-line="39" selection-end-column="102" />
               <folding>
-                <element signature="e#0#32#0" expanded="true" />
+                <element signature="e#639#671#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/forum/templates/forum/AllTasks.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="19" column="36" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="155" column="79" selection-start-line="155" selection-start-column="79" selection-end-line="155" selection-end-column="79" />
+            <state relative-caret-position="288">
+              <caret line="189" column="57" selection-start-line="189" selection-start-column="57" selection-end-line="189" selection-end-column="57" />
               <folding>
                 <element signature="e#0#63#0" expanded="true" />
               </folding>
@@ -101,13 +84,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/templates/forum/base.html">
+        <entry file="file://$PROJECT_DIR$/env/Lib/site-packages/django/contrib/sessions/backends/base.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="53">
-              <caret line="22" column="59" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
-              <folding>
-                <element signature="n#style#0;n#span#0;n#header#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="132">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/templates/forum/thanks.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1680">
+              <caret line="70" column="20" lean-forward="true" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/templates/forum/my_responsible_tasks.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="282">
+              <caret line="25" column="156" selection-start-line="25" selection-start-column="156" selection-end-line="25" selection-end-column="156" />
             </state>
           </provider>
         </entry>
@@ -148,6 +146,7 @@
       <find>accept_task</find>
       <find>404</find>
       <find>&gt;</find>
+      <find>checkformvaildandsave</find>
     </findStrings>
     <replaceStrings>
       <replace>forms</replace>
@@ -188,10 +187,12 @@
         <option value="$PROJECT_DIR$/forum/templates/forum/accepttask.html" />
         <option value="$PROJECT_DIR$/forum/templates/forum/my_tasks.html" />
         <option value="$PROJECT_DIR$/forum/templates/forum/task_confirm.html" />
-        <option value="$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html" />
         <option value="$PROJECT_DIR$/forum/templates/forum/questions.html" />
-        <option value="$PROJECT_DIR$/forum/urls.py" />
         <option value="$PROJECT_DIR$/forum/templates/forum/base.html" />
+        <option value="$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html" />
+        <option value="$PROJECT_DIR$/forum/templates/forum/AllTasks.html" />
+        <option value="$PROJECT_DIR$/forum/urls.py" />
+        <option value="$PROJECT_DIR$/forum/templates/forum/my_responsible_tasks.html" />
         <option value="$PROJECT_DIR$/forum/views.py" />
       </list>
     </option>
@@ -435,7 +436,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.2431562" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.27697262" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32850242" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -469,10 +470,6 @@
     <state x="141" y="134" key="SettingsEditor/0.0.1280.984/-1280.0.1280.984@0.0.1280.984" timestamp="1593270416850" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/forum/static/js/bootstrap.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/static/media/未命名.jpg" />
     <entry file="file://$PROJECT_DIR$/forum/static/media/17437825_155013001687326_6889700049039654912_n.jpg" />
     <entry file="file://$PROJECT_DIR$/forum/static/media/72Q5-6tb3ZiT3cSvg-7v.jpg" />
     <entry file="file://$PROJECT_DIR$/forum/templates/forum/index.html" />
@@ -500,13 +497,6 @@
           <folding>
             <element signature="e#639#680#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/htll.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
         </state>
       </provider>
     </entry>
@@ -618,9 +608,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/answer.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/forum/templates/forum/questions_delete.html" />
     <entry file="file://$PROJECT_DIR$/forum/auth.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -642,49 +629,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-48">
-          <caret line="10" column="71" selection-start-line="10" selection-start-column="71" selection-end-line="10" selection-end-column="71" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="11" column="51" lean-forward="true" selection-start-line="11" selection-start-column="51" selection-end-line="11" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
             <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/task.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1464">
-          <caret line="61" column="94" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/thanks.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1704">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/get_task.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-424">
-          <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -703,23 +652,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/recent_post.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/checkmail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56">
-          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_accept.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/forum/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -729,51 +661,133 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_confirm.html">
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/AllTasks.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="22" column="11" lean-forward="true" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="11" />
+        <state relative-caret-position="72">
+          <caret line="3" column="33" lean-forward="true" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="29" column="19" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="19" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/answer.html">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/templates/forum/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="53">
-          <caret line="22" column="59" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
+        <state relative-caret-position="792">
+          <caret line="36" column="16" lean-forward="true" selection-start-line="36" selection-start-column="16" selection-end-line="36" selection-end-column="16" />
           <folding>
             <element signature="n#style#0;n#span#0;n#header#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views.py">
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/checkmail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="155" column="79" selection-start-line="155" selection-start-column="79" selection-end-line="155" selection-end-column="79" />
+        <state relative-caret-position="192">
+          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/get_task.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
           <folding>
-            <element signature="e#0#63#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/templates/forum/AllTasks.html">
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="19" column="36" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
+        <state relative-caret-position="240">
+          <caret line="10" column="71" selection-start-line="10" selection-start-column="71" selection-end-line="10" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/htll.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="11" column="51" lean-forward="true" selection-start-line="11" selection-start-column="51" selection-end-line="11" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/recent_post.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_accept.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_confirm.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="22" column="11" lean-forward="true" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/thanks.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1680">
+          <caret line="70" column="20" lean-forward="true" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/task_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1464">
+          <caret line="61" column="94" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/my_request_tasks.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24">
+          <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/templates/forum/my_responsible_tasks.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="25" column="156" selection-start-line="25" selection-start-column="156" selection-end-line="25" selection-end-column="156" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="39" column="102" selection-start-line="39" selection-start-column="89" selection-end-line="39" selection-end-column="102" />
+          <folding>
+            <element signature="e#639#671#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/env/Lib/site-packages/django/contrib/sessions/backends/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="189" column="57" selection-start-line="189" selection-start-column="57" selection-end-line="189" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#63#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

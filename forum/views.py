@@ -10,17 +10,12 @@ from django.core.files.base import ContentFile
 def get_index_page(request):
     return render(request, 'forum/home.html')
 
+#start a request task
 def get_task(request):
     msg, username ='', ''
     QueryDict_ask = QueryDict('', mutable=True)
     if request.method == 'POST':
-        print("request.POST")
-        print(request.POST)
-
-        print("request.FILES")
-        print(request.FILES)
         if 'username' in request.session:
-            print('IM in')
             username = str(request.session['username'])
             request.POST._mutable = True #need change to mutable
             QueryDict_ask = request.POST
@@ -30,7 +25,6 @@ def get_task(request):
             msg ='請先登入 login first please'
             print('login first')
             return render(request, 'forum/get_task.html', {'msg': msg})
-
         if form.is_valid():
             form = form.save()
             request_id = form.id
@@ -44,23 +38,14 @@ def get_task(request):
         form = QuestionPostForm()
     return render(request, 'forum/get_task.html', {'form': form})
 
-def checkformvaildandsave(form):
-    if form.is_valid():
-        form = form.save()
-        request_id = form.id
-        form.save()
-        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
-        return HttpResponseRedirect(url)
-    else:
-        print('is_valid() failed')
-
 #task page
 def get_the_text(request, question_url_id):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
     ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
     querytwo = Comment.objects.filter(post_id=question_url_id)
-    return render(request, 'forum/task.html', {'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue})
+    return render(request, 'forum/task_detail.html', {'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue})
 
+#show all tasks
 def TasksOverview(request):
     query = QuestionPost.objects.all()
     return render(request, 'forum/AllTasks.html', {'query': query})
@@ -155,6 +140,7 @@ def modify_task(request, question_url_id):
             msg = 'Only modify your own task 無法更改別人的委託'
     return render(request, 'forum/AllTasks.html', {'query': query, 'msg': msg})
 
+#the owner make confirm some one can delivery
 def confirm_task(request, question_url_id):
     accepter, msg, acceptmsg, title, id = '', '', '', '', ''
     query = QuestionPost.objects.filter(id=question_url_id)
@@ -165,10 +151,10 @@ def confirm_task(request, question_url_id):
     id = question_url_id
     if request.method == "POST":
         if is_sameperson_bool(request, question_url_id) == True:
-            if state == 'proceeding':
+            if state == 'confirmed':
                 msg = 'Allready checked 您已經同意過'
             else:
-                str = 'proceeding'
+                str = 'confirmed'
                 query.update(state=str)
         else:
             msg = 'Only task owner can agree 只有發案者可同意運送'
@@ -177,11 +163,46 @@ def confirm_task(request, question_url_id):
 def my_request_tasks(request):
     query, msg = '', ''
     if 'username' in request.session:
-        username =str(request.session['username' ])
+        username =str(request.session['username'])
         query = QuestionPost.objects.filter(username=username)
     else:
         msg = '請先登入 please login first'
     return render(request, 'forum/my_request_tasks.html', {'query': query, 'msg':msg})
 
-def my_delivery_tasks(request):
-    pass
+def my_responsible_tasks(request):
+    query, msg = '', ''
+    if 'username' in request.session:
+        accepter = str(request.session['username'])
+        query = QuestionPost.objects.filter(accepter=accepter)
+    else:
+        msg = '請先登入 please login first'
+    return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
+
+def task_received(request, question_url_id):
+    query, msg, s = '', '', ''
+    query = QuestionPost.objects.filter(id=question_url_id)
+    if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
+        title = list(query.values("title"))[0]['title']
+        msg = title + ' 物品送達'
+        s = 'arrived'
+        query.update(state=s)
+    else:
+        msg = 'Only responsible person operatre 只有接案者可操作'
+    return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
+
+def cancel_task(request, question_url_id):
+    query = QuestionPost.objects.filter(id=question_url_id)
+    state = list(query.values("state"))[0]['state']
+    if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
+        if state == 'proceeding' or 'confirmed' or 'arrived':
+            msg = '無法取消，委託人已確認或已送達'
+        else:
+            title = list(query.values("title"))[0]['title']
+            msg = title + ' 物品取消運送成功'
+            s = 'wait pickup'
+            accepter = ''
+            query.update(state=s, accepter=accepter)
+    else:
+        msg = 'Only responsible person operatre 只有接案者可操作'
+
+    return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})

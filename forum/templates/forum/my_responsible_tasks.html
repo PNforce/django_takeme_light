@@ -11,11 +11,11 @@
         <th>案件狀態state</th>
         <th>發案人owner</th>
         <th>接案人accepter</th>
-        <th>我要action</th>
+        <th>我要接案get mission</th>
     </tr>
     {% for item in query %}
     <tr>
-        <td><a href="/forum/view/{{ item.id }}/"> {{ item.title }} </a></td>
+        <td> {{ item.title }} </td>
         <td> {{ item.startloc }} </td>
         <td> {{ item.endloc }} </td>
         <td> {{ item.desc }} </td>
@@ -23,7 +23,7 @@
         <td><a> {{ item.state }} </a></td>
         <td><a> {{ item.username }} </a></td>
         <td><a> {{ item.accepter }} </a></td>
-        <td><a href="/forum/view/{{ item.id }}/"> 接案</a>/<a href="/forum/view/{{ item.id }}/delete/">刪</a>/<a href="/forum/view/{{ item.id }}/modify/">改</a></td>
+        <td><a href="/forum/view/{{ item.id }}/">詳細</a>/<a href="/forum/view/{{ item.id }}/cancel/">取消</a>/<a href="/forum/view/{{ item.id }}/task_received/">物品送達</a></td>
     </tr>
     {% endfor %}
 </table>

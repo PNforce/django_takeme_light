@@ -21,10 +21,11 @@
           <li class="active"><a href="/forum/">Home 首頁</a></li>
           {% block nav-forum %}<li><a href="/forum/get_task">send item 送件</a></li>{% endblock %}
           {% block nav-answer%}<li><a href="/forum/AllTasks">delivery item 運件</a></li>{% endblock %}
-            <li><a href="/forum/my_tasks">我的案件MyTasks</a></li>
+            <li><a href="/forum/my_tasks">MyTasks 我的案件</a></li>
+            <li><a href="/forum/my_responsible">MyResponsible 我的接案</a></li>
             <li><a href="/register/">sign-up 註冊</a></li>
           {% if request.session.username %}
-            <li><a href="/forum/logout">Logout</a></li>
+            <li><a href="/forum/logout">Logout 登出</a></li>
             {% else %}
             <li><a href="/forum/login">Login 登入</a></li>
             {% endif %}
@@ -35,7 +36,7 @@
 {% endblock %}
 {% block view %}
 {% endblock %}
-{% block AllQuestions %}
+{% block Alltasks %}
 {% endblock %}
 {% block content %}
 {% endblock %}
