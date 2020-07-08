@@ -1,7 +1,7 @@
 {% extends 'forum/base.html' %}
 
 {% block task_accept %}
-<h1>同意接受委託 accept the task {{ request_id }}</h1>
+<h1>接受委託 accept the task {{ request_id }}</h1>
     <form method="POST"  class="form form-horizontal">
         {% csrf_token %}
         <label for="username">your name : {{request.session.username}}</label><br>

@@ -61,9 +61,9 @@ def get_the_text(request, question_url_id):
     querytwo = Comment.objects.filter(post_id=question_url_id)
     return render(request, 'forum/task.html', {'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue})
 
-def QuestionOversight(request):
+def TasksOverview(request):
     query = QuestionPost.objects.all()
-    return render(request, 'forum/questions.html', {'query': query})
+    return render(request, 'forum/AllTasks.html', {'query': query})
 
 #on the task page
 def add_comment_to_post(request, question_url_id):
@@ -133,7 +133,7 @@ def accept_task(request, question_url_id):
             bt_display = "hidden"
             form = ''
             print('forbidden same person')
-    return render(request, 'forum/accepttask.html', {'form': form, 'request_id': '', 'bt_display': bt_display, 'msg':msg})
+    return render(request, 'forum/task_accept.html', {'form': form, 'request_id': '', 'bt_display': bt_display, 'msg':msg})
 
 def delete_task(request, question_url_id):
     msg = ''
@@ -143,26 +143,45 @@ def delete_task(request, question_url_id):
         task.delete()
     else:
         msg = 'Only delete your own task 無法刪除別人的委託'
-    return render(request, 'forum/questions.html', {'query': query, 'msg': msg})
+    return render(request, 'forum/AllTasks.html', {'query': query, 'msg': msg})
 
 def modify_task(request, question_url_id):
     msg = ''
     query = QuestionPost.objects.all()
-    if is_sameperson_bool(request, question_url_id) == True:
-        msg = '改'
-    else:
-        msg = 'Only modify your own task 無法更改別人的委託'
-    return render(request, 'forum/questions.html', {'query': query, 'msg': msg})
-    #return render(request, 'forum/questions.html', {'query': query})
+    if request.method == "POST":
+        if is_sameperson_bool(request, question_url_id) == True:
+            msg = '改 call ok'
+        else:
+            msg = 'Only modify your own task 無法更改別人的委託'
+    return render(request, 'forum/AllTasks.html', {'query': query, 'msg': msg})
 
 def confirm_task(request, question_url_id):
-    pass
+    accepter, msg, acceptmsg, title, id = '', '', '', '', ''
+    query = QuestionPost.objects.filter(id=question_url_id)
+    accepter = list(query.values("accepter"))[0]['accepter']  #get string value
+    acceptmsg = list(query.values("acceptmsg"))[0]['acceptmsg']
+    title = list(query.values("title"))[0]['title']
+    state = list(query.values("state"))[0]['state']
+    id = question_url_id
+    if request.method == "POST":
+        if is_sameperson_bool(request, question_url_id) == True:
+            if state == 'proceeding':
+                msg = 'Allready checked 您已經同意過'
+            else:
+                str = 'proceeding'
+                query.update(state=str)
+        else:
+            msg = 'Only task owner can agree 只有發案者可同意運送'
+    return render(request, 'forum/task_confirm.html', {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title':title, 'id': id, 'msg': msg})
 
-def my_tasks(request):
+def my_request_tasks(request):
     query, msg = '', ''
     if 'username' in request.session:
-        username =str(request.session['username'])
+        username =str(request.session['username' ])
         query = QuestionPost.objects.filter(username=username)
     else:
         msg = '請先登入 please login first'
-    return render(request, 'forum/my_tasks.html', {'query': query, 'msg':msg})
+    return render(request, 'forum/my_request_tasks.html', {'query': query, 'msg':msg})
+
+def my_delivery_tasks(request):
+    pass

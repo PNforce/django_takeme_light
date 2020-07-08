@@ -15,15 +15,15 @@
     </tr>
     {% for item in query %}
     <tr>
-        <td><a> {{ item.title }} </a></td>
-        <td><a> {{ item.startloc }} </a></td>
-        <td><a> {{ item.endloc }} </a></td>
-        <td><a> {{ item.desc }} </a></td>
-        <td><a> {{ item.price }} </a></td>
+        <td> {{ item.title }} </td>
+        <td> {{ item.startloc }} </td>
+        <td> {{ item.endloc }} </td>
+        <td> {{ item.desc }} </td>
+        <td> {{ item.price }} </td>
         <td><a> {{ item.state }} </a></td>
         <td><a> {{ item.username }} </a></td>
         <td><a> {{ item.accepter }} </a></td>
-        <td><a href="/forum/view/{{ item.id }}/"> 詳細</a>/<a href="/forum/view/{{ item.id }}/delete/">刪</a>/<a href="/forum/view/{{ item.id }}/modify/">改</a></td>
+        <td><a href="/forum/view/{{ item.id }}/"> 詳細</a>/<a href="/forum/view/{{ item.id }}/delete/">刪</a>/<a href="/forum/view/{{ item.id }}/modify/">改</a>/<a href="/forum/view/{{ item.id }}/confirm/">確認取件</a></td>
     </tr>
     {% endfor %}
 </table>
