@@ -193,14 +193,15 @@ def task_received(request, question_url_id):
 def cancel_task(request, question_url_id):
     query = QuestionPost.objects.filter(id=question_url_id)
     state = list(query.values("state"))[0]['state']
+    print(state)
     if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
-        if state == 'proceeding' or 'confirmed' or 'arrived':
+        if state == 'confirmed' or state == 'arrived':
             msg = '無法取消，委託人已確認或已送達'
         else:
             title = list(query.values("title"))[0]['title']
             msg = title + ' 物品取消運送成功'
             s = 'wait pickup'
-            accepter = ''
+            accepter = None
             query.update(state=s, accepter=accepter)
     else:
         msg = 'Only responsible person operatre 只有接案者可操作'

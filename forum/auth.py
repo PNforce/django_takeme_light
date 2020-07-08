@@ -16,6 +16,7 @@ def login(request):
             username = form.cleaned_data['username']
             exists = Registration.objects.filter(username=username).exists()
             activated = Registration.objects.filter(username=username, activated=1).exists()
+            print(activated)
             if activated == True:
                 if exists == True:
                     password_exists = Registration.objects.filter(username=username, password=password).exists()
@@ -28,7 +29,7 @@ def login(request):
                 else:
                     return HttpResponse('Username incorrect')
             else:
-                return HttpResponse('account not active 帳號未啟用，請檢察郵箱')
+                return HttpResponse('account is not actived 帳號未啟用，請檢查郵箱')
     else:
         form = Validate()
         return render(request, 'forum/login.html', context=locals())
