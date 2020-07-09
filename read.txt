@@ -27,13 +27,15 @@ html:
 #說明  https://www.cnblogs.com/ajianbeyourself/p/4937951.html
 #bk:<a class="btn btn-default" href="{% url 'forum:accepttask' question_url_id=item.id acceptor_id=se%}">確認接案 accept task</a>
 
-
+#GCP
+#https://blog.uccloud.com.tw/2018/10/28/%E9%83%A8%E7%BD%B2-django-2-%E8%87%B3-app-engine-2nd-%E6%A8%99%E6%BA%96%E7%92%B0%E5%A2%83%E6%95%99%E5%AD%B8/
 
 #form
 #表單update, delete
 #https://dotblogs.com.tw/kevinya/2018/08/07/152924
 <td> {% if food.is_spicy %} 辣 {% else %} 不辣 {% endif %} </td>
 #http://dokelung-blog.logdown.com/posts/220833-django-notes-7-forms
+#https://www.itread01.com/content/1542882784.html 下拉選單
 
 #註冊
 #smtp core 在auth.py, 設定在 setting

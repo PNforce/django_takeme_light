@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect
 from .forms import QuestionPostForm, CommentForm, AddAcceptor
 from .models import QuestionPost, Comment
 from django.http.request import QueryDict
+from .lang import showstatebylang
+
 from django.utils import timezone
 from django.core.files.base import ContentFile
 # Create your views here.
@@ -39,11 +41,11 @@ def get_task(request):
     return render(request, 'forum/get_task.html', {'form': form})
 
 #task page
-def get_the_text(request, question_url_id):
+def get_the_text(request, question_url_id, msg =''):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
     ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
     querytwo = Comment.objects.filter(post_id=question_url_id)
-    return render(request, 'forum/task_detail.html', {'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue})
+    return render(request, 'forum/task_detail.html', {'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue, 'msg':msg})
 
 #show all tasks
 def TasksOverview(request):
@@ -102,10 +104,8 @@ def accept_task(request, question_url_id):
     msg, bt_display ='', 'hidden'
     form = AddAcceptor()
     request_id = question_url_id
-    if request.method == "POST":
-        if is_sameperson_bool(request, question_url_id)==False:
-            bt_display = "visible"
-            #ORM operate
+    if is_sameperson_bool(request, question_url_id)==False:
+        if request.method == "POST":
             form_update = QuestionPost.objects.filter(id=question_url_id).first()
             form_update.accepter = str(request.session['username'])
             form_update.state = "待確認wait confirm"
@@ -114,11 +114,16 @@ def accept_task(request, question_url_id):
             url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
         else:
-            msg = "You can't accept your own request 無法接受自己發出的提案，請重新選擇please click delivery item "
-            bt_display = "hidden"
-            form = ''
-            print('forbidden same person')
-    return render(request, 'forum/task_accept.html', {'form': form, 'request_id': '', 'bt_display': bt_display, 'msg':msg})
+            return render(request, 'forum/task_accept.html',{'form': form, 'request_id': '', 'bt_display': bt_display, 'msg': msg})
+    else:
+        msg = "You can't accept your own request 無法接受自己發出的提案，請重新選擇please click delivery item "
+        bt_display = "hidden"
+        form = ''
+        print('forbidden same person')
+        query = QuestionPost.objects.filter(pk=question_url_id).values()
+        ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
+        querytwo = Comment.objects.filter(post_id=question_url_id)
+        return render(request, 'forum/task_detail.html',{'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue, 'msg': msg})
 
 def delete_task(request, question_url_id):
     msg = ''
@@ -132,17 +137,28 @@ def delete_task(request, question_url_id):
 
 def modify_task(request, question_url_id):
     msg = ''
-    query = QuestionPost.objects.all()
+    query = QuestionPost.objects.filter(id=question_url_id)
+    title = list(query.values("title"))[0]['title']
+    startloc = list(query.values("startloc"))[0]['startloc']
+    endloc = list(query.values("endloc"))[0]['endloc']
+    desc = list(query.values("desc"))[0]['desc']
+    price = list(query.values("price"))[0]['price']
+    state = list(query.values("state"))[0]['state']
+
     if request.method == "POST":
         if is_sameperson_bool(request, question_url_id) == True:
             msg = '改 call ok'
+            query.update(title=request.POST['title'], startloc=request.POST['startloc'], endloc=request.POST['endloc'],
+                          desc=request.POST['desc'], price=request.POST['price'])
+            print(request.POST)
         else:
             msg = 'Only modify your own task 無法更改別人的委託'
-    return render(request, 'forum/AllTasks.html', {'query': query, 'msg': msg})
+    return render(request, 'forum/task_modify.html', locals())
 
 #the owner make confirm some one can delivery
 def confirm_task(request, question_url_id):
     accepter, msg, acceptmsg, title, id = '', '', '', '', ''
+
     query = QuestionPost.objects.filter(id=question_url_id)
     accepter = list(query.values("accepter"))[0]['accepter']  #get string value
     acceptmsg = list(query.values("acceptmsg"))[0]['acceptmsg']
