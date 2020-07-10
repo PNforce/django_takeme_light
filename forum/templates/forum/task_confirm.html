@@ -1,25 +1,28 @@
 {% extends 'forum/base.html' %}
 
 {% block task_accept %}
-<h1> Agree starting to delivery 同意取件人來取件 {{ request_id }}</h1>
+<h3> Agree starting to delivery 同意取件人來取件 {{ request_id }}</h3>
     <form method="POST"  class="form form-horizontal">
         {% csrf_token %}
         <h3>{{msg}}</h3>
         <table class="table table-hover">
-            <label for="username">your name : {{request.session.username}}</label><br>
+
+            <label>取件人 Carrier name : {{accepter}}</label><br>
+            <label>取件人分數 history score : </label><br>
+            <label>取件人成功送件次數 sucessful cases: </label><br>
             <tr>
                 <th>案件名稱 item name</th>
                 <th>案件編號 item id</th>
                 <th>狀態 state</th>
                 <th>取件人 Carrier name</th>
                 <th>取件人給你留言 Carrier's messenge </th>
-            </tr>>
+            </tr>
                 <th>{{title}}</th>
                 <th>{{id}}</th>
                 <th>{{state}}</th>
                 <th>{{accepter}}</th>
                 <th>{{acceptmsg}}</th>
         </table>
-        <button type="submit" id="bt_task_confirm" class="save btn btn-default" accept 確認</button>
+        <button type="submit" id="bt_task_confirm" class="save btn btn-default"> accept 確認</button>
     </form>
 {% endblock %}

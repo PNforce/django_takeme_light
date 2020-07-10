@@ -10,13 +10,13 @@ class QuestionPost(models.Model):
     endloc = models.CharField(max_length=64, null=True)
     starttime = models.DateField(null=True, blank=True)
     endtime = models.DateField(null=True, blank=True)
-    price = models.CharField(max_length=20, null=True)
-    desc = models.TextField(max_length=300, null=True)
+    price = models.CharField(max_length=20, blank=True)
+    desc = models.TextField(max_length=300, blank=True)
     file = models.ImageField()
-    state = models.CharField(max_length=20, null=True)
+    state = models.CharField(max_length=20, default='open')
     username = models.CharField(max_length=20, null=True)
-    accepter = models.CharField(max_length=20, null=True)
-    acceptmsg = models.CharField(max_length=200, null=True)
+    accepter = models.CharField(max_length=20, blank=True)
+    acceptmsg = models.CharField(max_length=200, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):

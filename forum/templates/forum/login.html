@@ -6,6 +6,7 @@
     <header class="jumbotron hero-spacer">
         <form class="form-horizontal" action="" method="post">
             {% csrf_token %}
+            <h4>請先登入</h4>
             <h4>區分大小寫</h4>
             {% for x in form %}
             <div class="form-group">
