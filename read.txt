@@ -47,3 +47,7 @@ html:
 
 #單獨案件
 #view.getthtext() and thank.html
+
+#裝飾器
+https://ithelp.ithome.com.tw/articles/10200763
+https://blog.techbridge.cc/2018/06/15/python-decorator-%E5%85%A5%E9%96%80%E6%95%99%E5%AD%B8/

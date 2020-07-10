@@ -4,11 +4,9 @@ from .forms import QuestionPostForm, CommentForm, AddAcceptor
 from .models import QuestionPost, Comment
 from django.http.request import QueryDict
 from .lang import showstatebylang
-
 from django.utils import timezone
 from django.core.files.base import ContentFile
 # Create your views here.
-
 def get_index_page(request):
     return render(request, 'forum/home.html')
 
@@ -27,10 +25,14 @@ def get_task(request):
             msg ='請先登入 login first please'
             print('login first')
             return render(request, 'forum/get_task.html', {'msg': msg})
+
         if form.is_valid():
             form = form.save()
             request_id = form.id
             form.save()
+            #ch state from null to open, wait set default value
+            query = QuestionPost.objects.filter(id=request_id)
+            query.update(state='open')
             url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
         else:
@@ -40,7 +42,7 @@ def get_task(request):
         form = QuestionPostForm()
     return render(request, 'forum/get_task.html', {'form': form})
 
-#task page
+#task page, send a request
 def get_the_text(request, question_url_id, msg =''):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
     ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
@@ -85,6 +87,15 @@ def update_db(**kwargs):
         if key !='id' or 'model_name':
             form_update.key = kwargs[str(key)]
     form_update.save()
+#check the rule of act can do or not at current state
+def can_do_atstate_bool(act, now_state):
+    result = False
+    if now_state == 'open':
+        if act == 'accept_task':
+            result = True
+        #open accept wait_confirm wait_pickup shipping arrived score
+    p(result)
+    return result
 
 #control the auth of CRUD actions
 def is_sameperson_bool(request, question_url_id):
@@ -102,28 +113,37 @@ def is_sameperson_bool(request, question_url_id):
 #task/accept_task
 def accept_task(request, question_url_id):
     msg, bt_display ='', 'hidden'
-    form = AddAcceptor()
     request_id = question_url_id
-    if is_sameperson_bool(request, question_url_id)==False:
-        if request.method == "POST":
-            form_update = QuestionPost.objects.filter(id=question_url_id).first()
-            form_update.accepter = str(request.session['username'])
-            form_update.state = "待確認wait confirm"
-            form_update.acceptmsg = request.POST['acceptmsg']
-            form_update.save()
-            url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
-            return HttpResponseRedirect(url)
-        else:
-            return render(request, 'forum/task_accept.html',{'form': form, 'request_id': '', 'bt_display': bt_display, 'msg': msg})
-    else:
+    query = QuestionPost.objects.filter(id=question_url_id)
+    form = AddAcceptor()
+
+    query_value = query.values()
+    ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
+    querytwo = Comment.objects.filter(post_id=question_url_id)
+
+    if is_sameperson_bool(request, question_url_id) == True:
         msg = "You can't accept your own request 無法接受自己發出的提案，請重新選擇please click delivery item "
-        bt_display = "hidden"
-        form = ''
-        print('forbidden same person')
-        query = QuestionPost.objects.filter(pk=question_url_id).values()
-        ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
-        querytwo = Comment.objects.filter(post_id=question_url_id)
-        return render(request, 'forum/task_detail.html',{'query': query, 'querytwo': querytwo, 'ifvalue': ifvalue, 'msg': msg})
+        return render(request, 'forum/task_detail.html',
+                      {'query': query_value, 'querytwo': querytwo, 'ifvalue': ifvalue, 'msg': msg})
+
+    state = list(query.values("state"))[0]['state']
+    if can_do_atstate_bool('accept_task', state) == False:
+        msg = '已有人接案'
+        print('in alreadfy')
+        return render(request, 'forum/task_detail.html',
+                      {'query': query_value, 'querytwo': querytwo, 'ifvalue': ifvalue, 'msg': msg})
+
+    #can accept task and link to form page
+    if request.method == "POST":
+        form_update = query.first()
+        form_update.accepter = str(request.session['username'])
+        form_update.state = "accept"
+        form_update.acceptmsg = request.POST['acceptmsg']
+        form_update.save()
+        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+        return HttpResponseRedirect(url)
+
+    return render(request, 'forum/task_accept.html', {'form': form, 'request_id': '', 'msg': msg})
 
 def delete_task(request, question_url_id):
     msg = ''
@@ -158,7 +178,6 @@ def modify_task(request, question_url_id):
 #the owner make confirm some one can delivery
 def confirm_task(request, question_url_id):
     accepter, msg, acceptmsg, title, id = '', '', '', '', ''
-
     query = QuestionPost.objects.filter(id=question_url_id)
     accepter = list(query.values("accepter"))[0]['accepter']  #get string value
     acceptmsg = list(query.values("acceptmsg"))[0]['acceptmsg']
@@ -221,5 +240,11 @@ def cancel_task(request, question_url_id):
             query.update(state=s, accepter=accepter)
     else:
         msg = 'Only responsible person operatre 只有接案者可操作'
-
     return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
+
+#For INVEST fun:
+#print itself name and content
+def p(var):
+    import inspect
+    callers_local_vars = inspect.currentframe().f_back.f_locals.items()
+    print(str([k for k, v in callers_local_vars if v is var][0])+': '+str(var))
