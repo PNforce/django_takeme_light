@@ -37,16 +37,20 @@ html:
 #http://dokelung-blog.logdown.com/posts/220833-django-notes-7-forms
 #https://www.itread01.com/content/1542882784.html 下拉選單
 
+#model
+https://blog.csdn.net/hpu_yly_bj/article/details/78939748
+
+
 #註冊
-#smtp core 在auth.py, 設定在 setting
-#送出後到 checkmail.html
-#點確認信 連到 activate.html 內
+smtp core 在auth.py, 設定在 setting
+送出後到 checkmail.html
+點確認信 連到 activate.html 內
 
 #案件總攬
-#在question.html
+在question.html
 
 #單獨案件
-#view.getthtext() and thank.html
+view.getthtext() and thank.html
 
 #裝飾器
 https://ithelp.ithome.com.tw/articles/10200763

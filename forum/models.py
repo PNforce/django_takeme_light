@@ -38,3 +38,12 @@ class Registration(models.Model):
     bday = models.DateField(auto_now_add=False, null=True)
     created_at = models.DateField(auto_now_add=True)
     activated = models.BooleanField(null=False, default=0)
+    phone = models.CharField(max_length=13, null=True)
+
+class UserHistory(models.Model):
+    username = models.ForeignKey(Registration, on_delete=models.CASCADE)
+    good_score = models.CharField(max_length=6, null=True)
+    bad_score = models.CharField(max_length=6, null=True)
+    accept_times = models.CharField(max_length=10, null=True)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)

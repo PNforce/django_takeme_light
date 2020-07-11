@@ -10,6 +10,9 @@ def showstatebylang(word, lang='zh-tw'):
             'arrived': '物品抵達',
             'score': '互給評價'
         }
+        dic_base_html = {
+
+        }
     if word in dic_state:
         return dic_state[word]
     else:
