@@ -105,10 +105,8 @@ def is_sameperson_bool(request, question_url_id):
     a = list(db_username)
     if str(request.session['username']) == a[0]['username']:
         result = True
-        print('same person')
     else:
         result = False
-        print('not person')
     return result
 
 #task/accept_task
@@ -175,7 +173,6 @@ def task_received(request, question_url_id):
     query, msg, s = '', '', ''
     query = QuestionPost.objects.filter(id=question_url_id)
     state = list(query.values("state"))[0]['state']
-    print(state)
     act = 'task_received'
     if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
         if can_do_atstate_bool(act, state):
@@ -218,6 +215,8 @@ def modify_task(request, question_url_id):
             msg = '改 call ok'
             query.update(title=request.POST['title'], startloc=request.POST['startloc'], endloc=request.POST['endloc'],
                           desc=request.POST['desc'], price=request.POST['price'])
+            url = reverse('forum:my_request_tasks')
+            return HttpResponseRedirect(url)
     else:
         msg = 'Only modify your own task 無法更改別人的委託'
     return render(request, 'forum/task_modify.html', locals())
@@ -237,6 +236,12 @@ def cancel_task(request, question_url_id):
     else:
         msg = 'Only responsible person operatre 只有接案者可操作'
     return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
+
+def score_task(request, question_url_id):
+    msg = ''
+    query = QuestionPost.objects.filter(id=question_url_id)
+
+    return render(request, 'forum/.html', {'query': query, 'msg': msg})
 #__________________ operate function end ____________________________________
 
 #__________________ page frame start ____________________________________
