@@ -47,3 +47,13 @@ class UserHistory(models.Model):
     accept_times = models.CharField(max_length=10, null=True)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
+
+class Send_Comment(models.Model):
+    post = models.ForeignKey(UserHistory, related_name='send_comments', on_delete=models.CASCADE)
+    author = models.CharField(max_length=200)
+    text = models.TextField(max_length=200)
+    created_date = models.DateTimeField(default=timezone.now)
+    type = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.text

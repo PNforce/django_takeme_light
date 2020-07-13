@@ -37,7 +37,7 @@ def get_task(request):
             #ch state from null to open, wait set default value
             query = QuestionPost.objects.filter(id=request_id)
             query.update(state='open')
-            url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+            url = reverse('forum:detail_task', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
         else:
             print('is_valid() failed')
@@ -48,7 +48,7 @@ def get_task(request):
 
 #task page, send a request
 #@login_required(login_url='/forum/login/')
-def get_the_text(request, question_url_id, msg =''):
+def detail_task(request, question_url_id, msg =''):
     query = QuestionPost.objects.filter(pk=question_url_id).values()
     ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
     querytwo = Comment.objects.filter(post_id=question_url_id)
@@ -65,7 +65,7 @@ def add_comment_to_post(request, question_url_id):
             comment = form.save(commit=False)
             comment.post = post
             comment.save()
-            url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+            url = reverse('forum:detail_task', kwargs={'question_url_id': request_id})
             return HttpResponseRedirect(url)
     else:
         form = CommentForm()
@@ -117,12 +117,16 @@ def accept_task(request, question_url_id):
     query = QuestionPost.objects.filter(id=question_url_id)
     form = AddAcceptor()
     query_value = query.values()
+
+    if 'username' not in request.session:
+        msg = "請先登入 Login fisrt"
+        return render(request, 'forum/task_detail.html',
+                      {'query': query_value, 'querytwo': "", 'ifvalue': "", 'msg': msg})
+
     if is_sameperson_bool(request, question_url_id) == True:
         msg = "You can't accept your own request 無法接受自己發出的提案，請重新選擇please click delivery item "
-        ifvalue = QuestionPost.objects.filter(pk=question_url_id, file='None').exists()
-        querytwo = Comment.objects.filter(post_id=question_url_id)
         return render(request, 'forum/task_detail.html',
-                      {'query': query_value, 'querytwo': querytwo, 'ifvalue': ifvalue, 'msg': msg})
+                      {'query': query_value, 'querytwo': "", 'ifvalue': "", 'msg': msg})
 
     state = list(query.values("state"))[0]['state']
     if can_do_atstate_bool('accept_task', state) == False:
@@ -140,7 +144,7 @@ def accept_task(request, question_url_id):
         form_update.state = "wait_confirm"
         form_update.acceptmsg = request.POST['acceptmsg']
         form_update.save()
-        url = reverse('forum:get_the_text', kwargs={'question_url_id': request_id})
+        url = reverse('forum:detail_task', kwargs={'question_url_id': request_id})
         return HttpResponseRedirect(url)
     return render(request, 'forum/task_accept.html', {'form': form, 'request_id': '', 'msg': msg})
 
