@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponseRedirect
 from .forms import QuestionPostForm, CommentForm, AddAcceptor
 from .models import QuestionPost, Comment
 from django.http.request import QueryDict
+
 import inspect
 from django.contrib.auth.decorators import login_required
 from .lang import showstatebylang
@@ -91,11 +92,28 @@ def update_db(**kwargs):
 #check the rule of act can do or not at current state
 def can_do_atstate_bool(act, now_state):
     result = False
-    if now_state == 'open' and act == 'accept_task':
-        result = True
-    if (now_state == 'wait_pickup' or now_state == 'shipping') and act == 'task_received':
-        result = True
-    #open accept wait_confirm wait_pickup shipping arrived score
+    if act == 'delete_task':
+        if now_state == 'open' or 'wait_confirm':
+            result = True
+    elif act =='modify_task':
+        if now_state == 'open' or 'wait_confirm':
+            result = True
+    elif act == 'confirm_task':
+        if now_state == 'wait_confirm':
+            result = True
+    elif act =='accept_task':
+        if now_state == 'open':
+            result = True
+    elif act =='cancel_pickup':
+        if now_state == 'wait_confirm' or 'wait_pickup':
+            result = True
+    elif act =='received_task':
+        if now_state == 'wait_pickup' or 'shipping':
+            result = True
+    elif act =='score_task':
+        if now_state == 'arrived':
+            result = True
+    #open  wait_confirm wait_pickup shipping arrived score
     return result
 
 #control the auth of CRUD actions
@@ -119,7 +137,7 @@ def accept_task(request, question_url_id):
     query_value = query.values()
 
     if 'username' not in request.session:
-        msg = "請先登入 Login fisrt"
+        msg = "請先登入 Login first"
         return render(request, 'forum/task_detail.html',
                       {'query': query_value, 'querytwo': "", 'ifvalue': "", 'msg': msg})
 
@@ -157,27 +175,33 @@ def confirm_task(request, question_url_id):
     title = list(query.values("title"))[0]['title']
     state = list(query.values("state"))[0]['state']
     id = question_url_id
-    if request.method == "POST":
-        if is_sameperson_bool(request, question_url_id) == True:
-            if state == 'wait_pickup':
-                msg = 'Allready checked 您已經同意過'
-            elif state == 'open':
-                msg = '還沒有人來取件'
-            elif state != 'wait_confirm':
-                msg = '無法操作'
-            elif state == 'wait_confirm':
+    act = 'confirm_task'
+    if is_sameperson_bool(request, question_url_id) == True:
+        if can_do_atstate_bool(act, state) ==True:
+            if request.method == "POST":
                 str = 'wait_pickup'
                 query.update(state=str)
-        else:
-            msg = 'Only task owner can agree 只有發案者可同意運送'
-    return render(request, 'forum/task_confirm.html', {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title':title, 'id': id, 'msg': msg})
+                return render(request, 'forum/task_confirm.html',
+                              {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
+                               'msg': msg})
+        elif state == 'wait_pickup':
+            msg = 'Allready checked 您已經同意過'
+        elif state == 'open':
+            msg = '還沒有人來取件'
+        elif state != 'wait_confirm':
+            msg = '無法操作'
+    else:
+        msg = 'Only task owner can agree 只有發案者可同意運送'
+    return render(request, 'forum/task_confirm.html',
+                  {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
+                   'msg': msg})
 
 #accepter operate
-def task_received(request, question_url_id):
+def received_task(request, question_url_id):
     query, msg, s = '', '', ''
     query = QuestionPost.objects.filter(id=question_url_id)
     state = list(query.values("state"))[0]['state']
-    act = 'task_received'
+    act = 'received_task'
     if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
         if can_do_atstate_bool(act, state):
             title = list(query.values("title"))[0]['title']
@@ -198,9 +222,15 @@ def task_received(request, question_url_id):
 def delete_task(request, question_url_id):
     msg = ''
     query = QuestionPost.objects.all()
+    act = 'delete_task'
+    state = list(query.values("state"))[0]['state']
     if is_sameperson_bool(request, question_url_id) == True:
-        task = QuestionPost.objects.filter(id=question_url_id)
-        task.delete()
+        if can_do_atstate_bool(act, state) == True:
+            task = QuestionPost.objects.filter(id=question_url_id)
+            #add pop-up warning
+            task.delete()
+        else:
+            msg == '只有在未接案階段，請先取消原有委託'
     else:
         msg = 'Only delete your own task 無法刪除別人的委託'
     return render(request, 'forum/my_request_tasks.html', {'query': query, 'msg': msg})
@@ -216,11 +246,15 @@ def modify_task(request, question_url_id):
         price = list(query.values("price"))[0]['price']
         state = list(query.values("state"))[0]['state']
         if request.method == "POST":
-            msg = '改 call ok'
-            query.update(title=request.POST['title'], startloc=request.POST['startloc'], endloc=request.POST['endloc'],
-                          desc=request.POST['desc'], price=request.POST['price'])
-            url = reverse('forum:my_request_tasks')
-            return HttpResponseRedirect(url)
+            act = 'modify_task'
+            if can_do_atstate_bool(act, state):
+                msg = '改 call ok'
+                query.update(title=request.POST['title'], startloc=request.POST['startloc'], endloc=request.POST['endloc'],
+                              desc=request.POST['desc'], price=request.POST['price'])
+                url = reverse('forum:my_request_tasks')
+                return HttpResponseRedirect(url)
+            else:
+                msg = '只能在未有人取件前作修改'
     else:
         msg = 'Only modify your own task 無法更改別人的委託'
     return render(request, 'forum/task_modify.html', locals())
@@ -228,12 +262,13 @@ def modify_task(request, question_url_id):
 def cancel_task(request, question_url_id):
     query = QuestionPost.objects.filter(id=question_url_id)
     state = list(query.values("state"))[0]['state']
+    act = 'cancel_task'
     if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
-        if state == 'wait_confirm' or state == 'wait_pickup':
+        if can_do_atstate_bool(act, state):
             title = list(query.values("title"))[0]['title']
             msg = title + ' 物品取消運送成功'
             s = 'open'
-            accepter = None
+            accepter = ''
             query.update(state=s, accepter=accepter)
         else:
             msg = '無法取消，委託人已確認或已送達'
@@ -242,10 +277,9 @@ def cancel_task(request, question_url_id):
     return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
 
 def score_task(request, question_url_id):
-    msg = ''
+    msg = '互相評分和金流階段'
     query = QuestionPost.objects.filter(id=question_url_id)
-
-    return render(request, 'forum/.html', {'query': query, 'msg': msg})
+    return render(request, 'forum/task_score.html', {'query': query, 'msg': msg})
 #__________________ operate function end ____________________________________
 
 #__________________ page frame start ____________________________________
@@ -255,14 +289,14 @@ def TasksOverview(request):
     return render(request, 'forum/AllTasks.html', {'query': query})
 
 #@login_required(login_url='/forum/login/')
-def my_request_tasks(request):
+def my_request_tasks(request, msg=''):
     query, msg = '', ''
     if 'username' in request.session:
         username =str(request.session['username'])
         query = QuestionPost.objects.filter(username=username)
     else:
         msg = '請先登入 please login first'
-    return render(request, 'forum/my_request_tasks.html', {'query': query, 'msg':msg})
+    return render(request, 'forum/my_request_tasks.html', {'query': query, 'msg': msg})
 
 #@login_required(login_url='/forum/login/')
 def my_responsible_tasks(request):

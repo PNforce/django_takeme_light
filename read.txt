@@ -47,8 +47,13 @@ smtp core 在auth.py, 設定在 setting
 點確認信 連到 activate.html 內
 
 #權限管理
+控制網頁元件出現
+https://djangogirlstaipei.gitbooks.io/django-girls-taipei-tutorial/django/template_tags.html
         {% if user.is_authenticated %}
         {% endif %}
+FRONTEND
+#下拉地圖
+https://www.wfublog.com/2017/10/taiwan-county-town-zip-address-twzipcode-jquery.html
 
 #案件總攬
 在question.html
