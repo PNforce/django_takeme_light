@@ -130,7 +130,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'forum/static/media')
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'patrick110413@gmail.com'
-
+LOGIN_REDIRECT_URL = '/'
 EMAIL_HOST_PASSWORD = "vbsqufevjocaxbkg"
 #"vbsqufevjocaxbkg"
 EMAIL_PORT = 465

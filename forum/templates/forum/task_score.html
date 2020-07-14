@@ -8,28 +8,55 @@
     <form method="POST"  class="form form-horizontal">
         {% csrf_token %}
 
-        <td> {% if is_user %} {{query.username}}  {% else %} {{query.accepter}} {% endif %} </td>
-        <h3>你好，請評分</h3>
+        <h3> 你好  {% if key_isuser %} {{username}} {% else %} {{accepter}} {% endif %} ! </h3>
+        <h3> {% if key_isuser %} 委託{{accepter}}運送 {% else %} 協助{{username}}運送 {% endif %} {{title}}，已收件完成</h3>
+        <h3> 請給對方評分  {% if key_isuser %} {{accepter}} {% else %} {{username}} {% endif %} </h3>
 
+        <h3>運送速度&準時</h3>
+        <div>
+            <label class="radio-inline">5</label>
+            <input type="radio" name="radio_score_speed" value="5" checked>
+            <label class="radio-inline">4</label>
+            <input type="radio" name="radio_score_speed" value="4">
+            <label class="radio-inline">3</label>
+            <input type="radio" name="radio_score_speed" value="3">
+            <label class="radio-inline">2</label>
+            <input type="radio" name="radio_score_speed" value="2">
+            <label class="radio-inline">1</label>
+            <input type="radio" name="radio_score_speed" value="1">
+        </div>
+
+        <h3>服務態度&回復速度</h3>
+        <div>
+            <label class="radio-inline">5</label>
+            <input type="radio" name="radio_score_service" value="5" checked>
+            <label class="radio-inline">4</label>
+            <input type="radio" name="radio_score_service" value="4">
+            <label class="radio-inline">3</label>
+            <input type="radio" name="radio_score_service" value="3">
+            <label class="radio-inline">2</label>
+            <input type="radio" name="radio_score_service" value="2">
+            <label class="radio-inline">1</label>
+            <input type="radio" name="radio_score_service" value="1">
+        </div>
+
+        <h3>整體評分</h3>
+        <div>
+            <label class="radio-inline">5</label>
+            <input type="radio" checked name="radio_score_all" value="5" >
+            <label class="radio-inline">4</label>
+            <input type="radio" name="radio_score_all" value="4">
+            <label class="radio-inline">3</label>
+            <input type="radio" name="radio_score_all" value="3">
+            <label class="radio-inline">2</label>
+            <input type="radio" name="radio_score_all" value="2">
+            <label class="radio-inline">1</label>
+            <input type="radio" name="radio_score_all" value="1">
+        </div>
+        <br>
         <table class="table table-hover">
-            <h3>修改刊登資料</h3>
-            <label for="fname">標題:</label>
-            <input type="text" id="ftitle" name="title" value={{query.title }}><br>
-            <br>
-            <label for="fdesc">金額:</label>
-            <input type="text" id="fprice" name="price" value={{ price }}><br>
-            <br>
-            <label for="fname">送貨速度 1-5 分:</label>
-            <input type="text" id="fstartloc" name="startloc" value={{ startloc }}><br>
-            <br>
-            <label for="fname">溝通態度 1-5分</label>
-            <input type="text" id="fendloc" name="endloc" value={{ endloc }}><br>
-            <br>
-            <label for="fdesc">整體評分:</label>
-            <input type="text" id="fdesc" name="desc" value={{ desc }}><br>
-            <br>
-            <label for="fdesc">整體評分:</label>
-            <input type="text" id="fdesc" name="desc" value={{ desc }}><br>
+            <label for="desc">評價留言</label>
+            <input type="text" id="desc" name="desc" value={{ desc }}><br>
         </table>
         <button type="submit" id="bt_task_modify" class="save btn btn-default">ok 確認</button>
     </form>

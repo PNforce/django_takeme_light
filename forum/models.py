@@ -42,10 +42,11 @@ class Registration(models.Model):
 
 class UserHistory(models.Model):
     username = models.ForeignKey(Registration, on_delete=models.CASCADE)
-    good_score = models.CharField(max_length=6, null=True)
-    bad_score = models.CharField(max_length=6, null=True)
-    accept_times = models.CharField(max_length=10, null=True)
-    text = models.TextField()
+    score_speed = models.CharField(max_length=1, null=True)
+    score_service = models.CharField(max_length=1, null=True)
+    score_all = models.CharField(max_length=1, null=True)
+    times = models.CharField(max_length=6, null=True)
+    score_desc = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
 
 class Send_Comment(models.Model):

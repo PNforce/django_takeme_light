@@ -21,6 +21,10 @@ python manage.py runserver
 #auto_now_add=True, 和輸入相衝
 #makemigrations 下一層資料夾， 例如 python manage.py makegigrations forum
 #forms.py 增加收資料的變數，model.py 內跟著改
+#    key2 = QueryDict('x=1&a=pax&c=3')
+
+CSS:
+https://www.itread01.com/content/1495209616.html
 
 html:
 #使用base.html為基礎，各網頁延伸 extend然後，{block ""} {end block 放到對應地方}
@@ -45,6 +49,9 @@ https://blog.csdn.net/hpu_yly_bj/article/details/78939748
 smtp core 在auth.py, 設定在 setting
 送出後到 checkmail.html
 點確認信 連到 activate.html 內
+
+# login Auth
+https://ithelp.ithome.com.tw/articles/10206063
 
 #權限管理
 控制網頁元件出現

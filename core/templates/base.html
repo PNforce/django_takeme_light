@@ -3,18 +3,24 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Welcome to Exenv</title>
+    <title></title>
 </head>
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Exenv</a>
         </div>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          {% block nav-forum %}<li><a href="#">Ask</a></li>{% endblock %}
-          {% block nav-answer%}<li><a href="#">Answer</a></li>{% endblock %}
-          <li><a href="#">Login</a></li>
+          <ul class="nav navbar-nav">
+          <li class="active"><a href="/forum/">Home 首頁</a></li>
+          {% block nav-forum %}<li><a href="/forum/get_task">send item 送件</a></li>{% endblock %}
+          {% block nav-answer%}<li><a href="/forum/AllTasks">delivery item 運件</a></li>{% endblock %}
+            <li><a href="/forum/my_tasks">MyTasks 我的案件</a></li>
+            <li><a href="/forum/my_responsible">MyResponsible 我的接案</a></li>
+            <li><a href="/register/">sign-up 註冊</a></li>
+          {% if request.session.username %}
+            <li><a href="/forum/logout">Logout 登出</a></li>
+            {% else %}
+            <li><a href="/forum/login">Login 登入</a></li>
+            {% endif %}
         </ul>
       </div>
     </nav>

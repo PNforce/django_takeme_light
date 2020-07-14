@@ -49,3 +49,18 @@ class AddAcceptor(forms.ModelForm):
     class Meta:
         model = QuestionPost
         fields = ('acceptmsg',)
+"""
+#send item
+class UserHistory(forms.ModelForm):
+
+    class Meta:
+        model = UserHistory
+        fields = ('score_speed', 'score_service','score_all', 'score_desc')
+
+#delivery item
+class AccepterHistory(forms.ModelForm):
+
+    class Meta:
+        model = AccepterHistory
+        fields = ('score_speed', 'score_service','score_all', 'score_desc')
+"""
