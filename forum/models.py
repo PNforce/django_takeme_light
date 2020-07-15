@@ -41,20 +41,19 @@ class Registration(models.Model):
     phone = models.CharField(max_length=13, null=True)
 
 class UserHistory(models.Model):
-    username = models.ForeignKey(Registration, on_delete=models.CASCADE)
-    score_speed = models.CharField(max_length=1, null=True)
-    score_service = models.CharField(max_length=1, null=True)
-    score_all = models.CharField(max_length=1, null=True)
-    times = models.CharField(max_length=6, null=True)
-    score_desc = models.TextField()
+    username = models.ForeignKey(Registration, related_name='UserHistorys', on_delete=models.CASCADE)
+    score_speed = models.CharField(max_length=2, blank=True)
+    score_service = models.CharField(max_length=2, blank=True)
+    score_all = models.CharField(max_length=2, blank=True)
+    times = models.CharField(max_length=6, default=1)
+    score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
 
-class Send_Comment(models.Model):
-    post = models.ForeignKey(UserHistory, related_name='send_comments', on_delete=models.CASCADE)
-    author = models.CharField(max_length=200)
-    text = models.TextField(max_length=200)
+class AccepterHistory(models.Model):
+    username = models.ForeignKey(Registration, related_name='AccepterHistorys', on_delete=models.CASCADE)
+    score_speed = models.CharField(max_length=2, null=True)
+    score_service = models.CharField(max_length=2, null=True)
+    score_all = models.CharField(max_length=2, null=True)
+    times = models.CharField(max_length=6, default=1)
+    score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
-    type = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.text

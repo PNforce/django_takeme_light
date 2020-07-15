@@ -40,7 +40,7 @@ class Register(forms.ModelForm):
 
     class Meta:
         model = Registration
-        exclude = ('activated','activate')
+        exclude = ('activated', 'activate')
         widgets = {
             'bday': DateInput(),
         }
@@ -49,7 +49,7 @@ class AddAcceptor(forms.ModelForm):
     class Meta:
         model = QuestionPost
         fields = ('acceptmsg',)
-"""
+
 #send item
 class UserHistory(forms.ModelForm):
 
@@ -63,4 +63,3 @@ class AccepterHistory(forms.ModelForm):
     class Meta:
         model = AccepterHistory
         fields = ('score_speed', 'score_service','score_all', 'score_desc')
-"""
