@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponseRedirect
 from .forms import QuestionPostForm, CommentForm, AddAcceptor
-from .models import QuestionPost, Comment
+from .models import QuestionPost, Comment, AccepterHistory, UserHistory
 from django.http.request import QueryDict
 
 import inspect
@@ -293,17 +293,33 @@ def cancel_task(request, question_url_id):
 
 def score_task(request, question_url_id):
     msg, key_isuser, username, accepter = '', '', '', ''
+
+    #load score page initial
+    query = QuestionPost.objects.filter(id=question_url_id)
+    username = list(query.values("username"))[0]['username']
+    accepter = list(query.values("accepter"))[0]['accepter']
+    title = list(query.values("title"))[0]['title']
+    id = list(query.values("id"))[0]['id']
+    if is_sameperson_bool(request, question_url_id) == True:
+        key_isuser = 'y'
+
+    #read post info and write into db
     if request.method == "POST":
         score_speed = request.POST['radio_score_speed']
         score_service = request.POST['radio_score_speed']
         score_all = request.POST['radio_score_all']
         score_desc = request.POST['desc']
-    query = QuestionPost.objects.filter(id=question_url_id)
-    username = list(query.values("username"))[0]['username']
-    accepter = list(query.values("accepter"))[0]['accepter']
-    title = list(query.values("title"))[0]['title']
-    if is_sameperson_bool(request, question_url_id) == True:
-        key_isuser = 'y'
+        login_user = request.session['username']
+        p(score_speed, score_service, score_all, score_desc)
+        #score each other
+        if username == login_user:
+            accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc, user=id)
+        elif accepter == login_user:
+            user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all= score_all, score_desc=score_desc, user=id)
+
+        msg = '評分成功'
+        return render(request, 'forum/task_score.html', locals())
+
     return render(request, 'forum/task_score.html', locals())
 
 def querydic_return(*wargs):
@@ -345,7 +361,8 @@ def my_responsible_tasks(request):
 
 # For INVEST fun:
 # print itself name and content
-def p(var):
+def p(*vars):
     import inspect
-    callers_local_vars = inspect.currentframe().f_back.f_locals.items()
-    print(str([k for k, v in callers_local_vars if v is var][0]) + ': ' + str(var))
+    for var in vars:
+        callers_local_vars = inspect.currentframe().f_back.f_locals.items()
+        print(str([k for k, v in callers_local_vars if v is var][0]) + ': ' + str(var))

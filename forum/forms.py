@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment, QuestionPost, Registration
+from .models import Comment, QuestionPost, Registration, UserHistory, AccepterHistory
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 #from django.contrib.auth.forms import UserCreationForm
