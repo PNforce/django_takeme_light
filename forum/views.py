@@ -100,10 +100,10 @@ def update_db(**kwargs):
 def can_do_atstate_bool(act, now_state):
     result = False
     if act == 'delete_task':
-        if now_state == 'open' or 'wait_confirm':
+        if now_state == ('open' or 'wait_confirm'):
             result = True
     elif act == 'modify_task':
-        if now_state == 'open' or 'wait_confirm':
+        if now_state == ('open' or 'wait_confirm'):
             result = True
     elif act == 'confirm_task':
         if now_state == 'wait_confirm':
@@ -112,10 +112,10 @@ def can_do_atstate_bool(act, now_state):
         if now_state == 'open':
             result = True
     elif act == 'cancel_pickup':
-        if now_state == 'wait_confirm' or 'wait_pickup':
+        if now_state == ('wait_confirm' or 'wait_pickup'):
             result = True
     elif act == 'received_task':
-        if now_state == 'wait_pickup' or 'shipping':
+        if now_state == ('wait_pickup' or 'shipping'):
             result = True
     elif act == 'score_task':
         if now_state == 'arrived':
@@ -259,12 +259,13 @@ def modify_task(request, question_url_id):
         state = list(query.values("state"))[0]['state']
         if request.method == "POST":
             act = 'modify_task'
-            if can_do_atstate_bool(act, state):
+            if can_do_atstate_bool(act, state) == True:
                 msg = '改 call ok'
                 query.update(title=request.POST['title'], startloc=request.POST['startloc'],
                              endloc=request.POST['endloc'],
                              desc=request.POST['desc'], price=request.POST['price'])
                 url = reverse('forum:my_request_tasks')
+                #alert pop('修改完成')
                 return HttpResponseRedirect(url)
             else:
                 msg = '只能在未有人取件前作修改'
