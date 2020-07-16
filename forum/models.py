@@ -40,6 +40,9 @@ class Registration(models.Model):
     activated = models.BooleanField(null=False, default=0)
     phone = models.CharField(max_length=15, null=True)
 
+    def __str__(self):
+        return self.username
+
 class UserHistory(models.Model):
     user = models.ForeignKey(Registration, related_name='UserHistorys', on_delete=models.CASCADE, blank=True)
     score_speed = models.CharField(max_length=2, null=True)
@@ -49,6 +52,9 @@ class UserHistory(models.Model):
     score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return self.user
+
 class AccepterHistory(models.Model):
     Accepter = models.ForeignKey(Registration, related_name='AccepterHistorys', on_delete=models.CASCADE, blank=True)
     score_speed = models.CharField(max_length=2, null=True)
@@ -57,3 +63,6 @@ class AccepterHistory(models.Model):
     times = models.CharField(max_length=6, default='1')
     score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.Accepter
