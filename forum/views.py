@@ -301,6 +301,7 @@ def score_task(request, question_url_id):
     accepter = list(query.values("accepter"))[0]['accepter']
     title = list(query.values("title"))[0]['title']
     state = list(query.values("title"))[0]['title']
+    id = list(query.values("id"))[0]['id']
 
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
@@ -311,15 +312,20 @@ def score_task(request, question_url_id):
         score_all = request.POST['radio_score_all']
         score_desc = request.POST['desc']
         login_user = request.session['username']
-        #p(score_speed, score_service, score_all, score_desc)
+        task_id = id
         #score each other
         if username == login_user:
             res = Registration.objects.get(username=accepter)
-            #print(type(res))
-            accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc, Accepter=res)
+            history = AccepterHistory.objects.filter(id=task_id)
+            p(history)
+            #wait check how to define <QuerySet []>
+            if history != None:
+                print('repeat data')
+            else:
+                accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc,task_id=task_id, Accepter=res)
         elif accepter == login_user:
-            user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all= score_all, score_desc=score_desc, user=username)
-
+            res = Registration.objects.get(username=username)
+            user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all,task_id=task_id, score_desc=score_desc, user=res)
         msg = '評分成功'
         return render(request, 'forum/task_score.html', locals())
 

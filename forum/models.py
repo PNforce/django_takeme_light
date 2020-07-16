@@ -51,7 +51,7 @@ class UserHistory(models.Model):
     times = models.CharField(max_length=6, default='1')
     score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
-
+    task_id = models.CharField(max_length=7, blank=True)
     def __str__(self):
         return self.user
 
@@ -63,6 +63,6 @@ class AccepterHistory(models.Model):
     times = models.CharField(max_length=6, default='1')
     score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
-
+    task_id = models.CharField(max_length=7, blank=True)
     def __str__(self):
         return self.Accepter
