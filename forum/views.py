@@ -294,6 +294,8 @@ def cancel_task(request, question_url_id):
 
 def score_task(request, question_url_id):
     msg, key_isuser, username, accepter = '', '', '', ''
+    login_user = request.session['username']
+    msg_repeat_score = '重複評分'
 
     #load score page initial
     query = QuestionPost.objects.filter(id=question_url_id)
@@ -301,10 +303,21 @@ def score_task(request, question_url_id):
     accepter = list(query.values("accepter"))[0]['accepter']
     title = list(query.values("title"))[0]['title']
     state = list(query.values("title"))[0]['title']
-    id = list(query.values("id"))[0]['id']
+
+    #if repeat score redirect to original page
+    if username == login_user:
+        history = AccepterHistory.objects.filter(id=question_url_id)
+        if history.exists():
+            print('repeat so redirect')
+            return HttpResponseRedirect(f'/forum/my_responsible/?msg={msg_repeat_score}')
+    elif accepter == login_user:
+        if UserHistory.objects.filter(id=question_url_id).exist():
+            print('repeat so redirect')
+            return HttpResponseRedirect(f'/forum/my_tasks/?msg={msg_repeat_score}')
 
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
+
     #read post info and write into db
     if request.method == "POST":
         score_speed = request.POST['radio_score_speed']
@@ -315,24 +328,15 @@ def score_task(request, question_url_id):
         task_id = id
         #score each other
         if username == login_user:
-            res = Registration.objects.get(username=accepter)
             history = AccepterHistory.objects.filter(id=task_id)
-            p(history)
-            #wait check how to define <QuerySet []>
-            if history != None:
-                print('repeat data')
-            else:
-                accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc,task_id=task_id, Accepter=res)
+            res = Registration.objects.get(username=accepter)
+            msg = '評分成功'
+            accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc,task_id=task_id, Accepter=res)
         elif accepter == login_user:
             res = Registration.objects.get(username=username)
             user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all,task_id=task_id, score_desc=score_desc, user=res)
-        msg = '評分成功'
-        return render(request, 'forum/task_score.html', locals())
-
+            msg = '評分成功'
     return render(request, 'forum/task_score.html', locals())
-
-def querydic_return(*wargs):
-    pass
 
 # __________________ operate function end ____________________________________
 # __________________ page frame start ____________________________________
@@ -346,8 +350,12 @@ def TasksOverview(request):
 
 # @login_required(login_url='/forum/login/')
 def my_request_tasks(request, msg=''):
-    query, msg, key_arrived = '', '',''
+    query, msg, key_arrived = '', '', ''
     if 'username' in request.session:
+        if request.method == "GET":
+            print('get str by GET')
+            print(request.GET.get('msg'))
+            #wait to add msg repeat
         username = str(request.session['username'])
         query = QuestionPost.objects.filter(username=username)
         #state = list(query.values("state"))[0]['state']

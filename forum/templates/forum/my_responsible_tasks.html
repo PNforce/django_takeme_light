@@ -11,7 +11,7 @@
         <th>案件狀態state</th>
         <th>發案人owner</th>
         <th>接案人accepter</th>
-        <th>我要接案get mission</th>
+        <th>__執行動作act__</th>
     </tr>
     {% for item in query %}
     <tr>
@@ -23,8 +23,17 @@
         <td><a> {{ item.state }} </a></td>
         <td><a> {{ item.username }} </a></td>
         <td><a> {{ item.accepter }} </a></td>
-        <td><a href="/forum/view/{{ item.id }}/">詳細</a>/<a href="/forum/view/{{ item.id }}/cancel/">取消</a>/<a href="/forum/view/{{ item.id }}/received_task/">物品送達</a></td>
+        <td><a href="/forum/view/{{ item.id }}/">詳細 </a>
+            {% if item.state == 'wait_confirm' or item.state == 'wait_confirm' %}|<a href="/forum/view/{{ item.id }}/cancel/"> 取消取件 </a> {% endif %}
+            {% if item.state == 'wait_pickup' or item.state == 'shipping' %}|<a href="/forum/view/{{ item.id }}/received_task/"> 物品送達 </a>{% endif %}
+            {% if item.state == 'arrived' %}|<a href="/forum/view/{{ item.id }}/score/"> 評分 </a> {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>
 {% endblock %}
+
+        <!--
+        <a href="/forum/view/{{ item.id }}/cancel/">取消</a>
+        /<a href="/forum/view/{{ item.id }}/received_task/">物品送達/
+        -->

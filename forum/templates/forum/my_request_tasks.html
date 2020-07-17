@@ -11,7 +11,7 @@
         <th>案件狀態state</th>
         <th>發案人owner</th>
         <th>接案人accepter</th>
-        <th>我要接案get mission</th>
+        <th>__執行動作act__</th>
     </tr>
     {% for item in query %}
     <tr>
@@ -23,10 +23,14 @@
         <td><a> {{ item.state }} </a></td>
         <td><a> {{ item.username }} </a></td>
         <td><a> {{ item.accepter }} </a></td>
-        <td><a href="/forum/view/{{ item.id }}/"> 詳細</a>/<a href="/forum/view/{{ item.id }}/delete/">刪</a>/
-            <a href="/forum/view/{{ item.id }}/modify/">改</a>/<a href="/forum/view/{{ item.id }}/confirm/">同意取件</a>/
-            {% if item.state == 'arrived' %} <a href="/forum/view/{{ item.id }}/score/">評分</a></td> {% endif%}
+        <td><a href="/forum/view/{{ item.id }}/"> 詳細</a>
+            {% if item.state == 'open' or item.state == 'wait_confirm' %}|<a href="/forum/view/{{ item.id }}/cancel/"> 刪 </a>{% endif%}
+            {% if item.state == 'open' or item.state == 'wait_confirm' %}|<a href="/forum/view/{{ item.id }}/modify/"> 改 </a>{% endif%}
+            {% if item.state == 'wait_confirm' %}|<a href="/forum/view/{{ item.id }}/confirm/"> 同意取件 </a>{% endif%}
+            {% if item.state == 'arrived' %}|<a href="/forum/view/{{ item.id }}/score/"> 評分</a>{% endif%}
+        </td>
     </tr>
+
     {% endfor %}
 </table>
 {% endblock %}
