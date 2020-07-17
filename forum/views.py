@@ -303,7 +303,7 @@ def score_task(request, question_url_id):
     accepter = list(query.values("accepter"))[0]['accepter']
     title = list(query.values("title"))[0]['title']
     state = list(query.values("title"))[0]['title']
-
+    """
     #if repeat score redirect to original page
     if username == login_user:
         history = AccepterHistory.objects.filter(id=question_url_id)
@@ -314,7 +314,7 @@ def score_task(request, question_url_id):
         if UserHistory.objects.filter(id=question_url_id).exist():
             print('repeat so redirect')
             return HttpResponseRedirect(f'/forum/my_tasks/?msg={msg_repeat_score}')
-
+    """
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
 
