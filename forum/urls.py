@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^view/(?P<question_url_id>[0-9]+)/modify/$', views.modify_task, name='modify_task'),
     url(r'^view/(?P<question_url_id>[0-9]+)/confirm/$', views.confirm_task, name='confirm_task'),
     url(r'^view/(?P<question_url_id>[0-9]+)/score/$', views.score_task, name='score_task'),
+    url(r'^view/(?P<user_name>\S+)/user_info/$', views.user_info, name='user_info'),
     url(r'^my_tasks/$', views.my_request_tasks, name='my_request_tasks'),
     url(r'^my_responsible/$', views.my_responsible_tasks, name='my_responsible_tasks'),
     url(r'^view/(?P<question_url_id>[0-9]+)/cancel/$', views.cancel_task, name='cancel_task'),

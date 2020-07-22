@@ -303,18 +303,22 @@ def score_task(request, question_url_id):
     accepter = list(query.values("accepter"))[0]['accepter']
     title = list(query.values("title"))[0]['title']
     state = list(query.values("title"))[0]['title']
-    """
+
+
     #if repeat score redirect to original page
     if username == login_user:
         history = AccepterHistory.objects.filter(id=question_url_id)
         if history.exists():
             print('repeat so redirect')
-            return HttpResponseRedirect(f'/forum/my_responsible/?msg={msg_repeat_score}')
+            #redirect('forum:my_request_tasks', msg=msg_repeat_score)
+        #return render(request, 'forum/my_request_tasks.html', msg=msg_repeat)
     elif accepter == login_user:
-        if UserHistory.objects.filter(id=question_url_id).exist():
+        history = UserHistory.objects.filter(id=question_url_id)
+        if history.exists():
             print('repeat so redirect')
-            return HttpResponseRedirect(f'/forum/my_tasks/?msg={msg_repeat_score}')
-    """
+        return render(request, 'forum/my_request_tasks.html', msg=msg_repeat_score)
+
+
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
 
@@ -325,10 +329,10 @@ def score_task(request, question_url_id):
         score_all = request.POST['radio_score_all']
         score_desc = request.POST['desc']
         login_user = request.session['username']
-        task_id = id
+        task_id = question_url_id
         #score each other
         if username == login_user:
-            history = AccepterHistory.objects.filter(id=task_id)
+            history = AccepterHistory.objects.filter(id=task_id) # can delete?
             res = Registration.objects.get(username=accepter)
             msg = '評分成功'
             accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc,task_id=task_id, Accepter=res)
@@ -374,7 +378,47 @@ def my_responsible_tasks(request):
         msg = '請先登入 please login first'
     return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
 # __________________ page frame end ____________________________________
+def user_info(request, user_name):
+    username, send_times, send_score_service, send_score_speed, send_score_all = '', '', '', '', ''
+    accept_times, accept_score_service, accept_score_speed, accept_score_all = '', '', '', ''
+    search_user_name = user_name
 
+    if request.method == "POST":
+        search_user_name = request.POST['te_name']
+
+    #from username find Registration id(pk)
+    query = Registration.objects.filter(username=search_user_name)
+    Accepter_id = list(query.values("id"))[0]['id']
+
+    #Find querydic from AccepterHistory
+    acc_query = AccepterHistory.objects.filter(Accepter_id=Accepter_id)
+    accept_score_service = list(acc_query.values("score_service"))[0]['score_service']
+    accept_score_speed = list(acc_query.values("score_speed"))[0]['score_speed']
+    accept_score_all = list(acc_query.values("score_all"))[0]['score_all']
+    # BUG, if multi times how to sum and return?
+
+    # Find querydic from UserHistory
+    user_id = Accepter_id
+    user_query = UserHistory.objects.filter(user_id=user_id)
+    send_score_service = list(user_query.values("score_service"))[0]['score_service']
+    send_score_speed = list(user_query.values("score_speed"))[0]['score_speed']
+    send_score_all = list(user_query.values("score_all"))[0]['score_all']
+
+    """
+    <h3>名稱name :  {{username}}</h3>
+        <h4>送件-次數 : {{send_times}}</h4>
+        <h4>送件-運送速度&準時 : {{send_score_service}}</h4>
+        <h4>送件-服務態度&回復速度 : {{send_score_speed}}</h4>
+        <h4>送件-整體評分 : {{send_score_all}}</h4>
+    </table>
+    <table class="table table-hover">
+        <h4>接案-次數 : {{accept_times}}</h4>
+        <h4>接案-運送速度&準時 : {{accept_score_service}}</h4>
+        <h4>接案-服務態度&回復速度 : {{accept_score_speed}}</h4>
+        <h4>接案-整體評分 : {{accept_score_all}}</h4>
+    """
+
+    return render(request, 'forum/user_info.html', locals())
 
 # For INVEST fun:
 # print itself name and content

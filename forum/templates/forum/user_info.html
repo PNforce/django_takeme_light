@@ -1,0 +1,24 @@
+{% extends 'forum/base.html' %}
+
+{% block task_accept %}
+    <form method="POST"  class="form form-horizontal">
+        {% csrf_token %}
+          <label for="fname">查詢用戶名:</label>
+          <input type="text" id="t_name" name="te_name"><br><br>
+        <button type="submit" id="bt_accept" class="save btn btn-default">accept 確認</button>
+    </form>
+    <table class="table table-hover">
+        <h3>名稱name :  {{user_name}}</h3>
+        <h4>送件-次數 : {{send_times}}</h4>
+        <h4>送件-運送速度&準時 : {{send_score_service}}</h4>
+        <h4>送件-服務態度&回復速度 : {{send_score_speed}}</h4>
+        <h4>送件-整體評分 : {{send_score_all}}</h4>
+    </table>
+    <table class="table table-hover">
+        <h4>接案-次數 : {{accept_times}}</h4>
+        <h4>接案-運送速度&準時 : {{accept_score_service}}</h4>
+        <h4>接案-服務態度&回復速度 : {{accept_score_speed}}</h4>
+        <h4>接案-整體評分 : {{accept_score_all}}</h4>
+    </table>
+    <h5>{{ msg }}</h5>
+{% endblock %}
