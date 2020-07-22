@@ -295,7 +295,7 @@ def cancel_task(request, question_url_id):
 def score_task(request, question_url_id):
     msg, key_isuser, username, accepter = '', '', '', ''
     login_user = request.session['username']
-    msg_repeat_score = '重複評分'
+    msg_repeat_score = '重複評分，回到上頁'
 
     #load score page initial
     query = QuestionPost.objects.filter(id=question_url_id)
@@ -312,11 +312,12 @@ def score_task(request, question_url_id):
             print('repeat so redirect')
             #redirect('forum:my_request_tasks', msg=msg_repeat_score)
         #return render(request, 'forum/my_request_tasks.html', msg=msg_repeat)
+        return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
     elif accepter == login_user:
         history = UserHistory.objects.filter(id=question_url_id)
         if history.exists():
             print('repeat so redirect')
-        return render(request, 'forum/my_request_tasks.html', msg=msg_repeat_score)
+        return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
 
 
     if is_sameperson_bool(request, question_url_id) == True:
