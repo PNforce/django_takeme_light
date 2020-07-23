@@ -21,8 +21,8 @@
         <td> {{ item.endtime }} </td>
         <td> {{ item.price }} </td>
         <td><a> {{ item.state }} </a></td>
-        <td><a> {{ item.username }} </a></td>
-        <td><a> {{ item.accepter }} </a></td>
+        <td><a href="/forum/view/{{ item.username }}/user_info/"> {{ item.username }} </a></td>
+        <td><a href="/forum/view/{{ item.accepter }}/user_info/"> {{ item.accepter }} </a></td>
         <td><a href="/forum/view/{{ item.id }}/">詳細資料&接案</a></td>
     </tr>
     {% endfor %}

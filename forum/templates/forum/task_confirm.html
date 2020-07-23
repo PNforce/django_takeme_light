@@ -6,10 +6,12 @@
         {% csrf_token %}
         <h3>{{msg}}</h3>
         <table class="table table-hover">
-
             <label>取件人 Carrier name : {{accepter}}</label><br>
-            <label>取件人分數 history score : </label><br>
-            <label>取件人成功送件次數 sucessful cases: </label><br>
+            <label>取件人 運送速度&準時 分數: {{accept_score_speed}} / 5.0</label><br>
+            <label>取件人 服務態度&回復速度 分數: {{accept_score_service}} / 5.0</label><br>
+            <label>取件人 整體 分數  : {{accept_score_all}} / 5.0</label><br>
+            <label>取件人成功送件次數 {{accept_times}}: </label><br>
+
             <tr>
                 <th>案件名稱 item name</th>
                 <th>案件編號 item id</th>
@@ -23,7 +25,9 @@
                 <th>{{accepter}}</th>
                 <th>{{acceptmsg}}</th>
         </table>
-        <button type="submit" id="bt_task_confirm" class="save btn btn-default">accept 確認</button>
-
+        <button type="submit" id="bt_task_confirm" class="save btn btn-default">accept 同意委託取件</button>
+    </form>
+    <form method="GET"  class="form form-horizontal">
+            <button type="submit" id="bt_task_dont_confirm" name="bt_task_dont_confirm" class="save btn btn-default">不同意委託</button>
     </form>
 {% endblock %}

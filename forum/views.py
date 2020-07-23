@@ -178,7 +178,10 @@ def accept_task(request, question_url_id):
 
 # the owner make confirm some one can delivery
 def confirm_task(request, question_url_id):
+
+    #read task info
     accepter, msg, acceptmsg, title, id = '', '', '', '', ''
+    accept_score_service, accept_score_speed, accept_score_all, accept_times, accepter_id = '', '', '', '', ''
     query = QuestionPost.objects.filter(id=question_url_id)
     accepter = list(query.values("accepter"))[0]['accepter']  # get string value
     acceptmsg = list(query.values("acceptmsg"))[0]['acceptmsg']
@@ -186,26 +189,41 @@ def confirm_task(request, question_url_id):
     state = list(query.values("state"))[0]['state']
     id = question_url_id
     act = 'confirm_task'
+
+    #read accepter score record
+    accept_score_service, accept_score_speed, accept_score_all, accept_times, accepter_id = read_accepter_score(accepter)
+
+    #agree accepter come to pickup stuff
     if is_sameperson_bool(request, question_url_id) == True:
         if can_do_atstate_bool(act, state) == True:
             if request.method == "POST":
                 str = 'wait_pickup'
                 query.update(state=str)
+                msg = '完成同意取件'
+                p(request)
                 return render(request, 'forum/task_confirm.html',
                               {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
                                'msg': msg})
+            """
+            elif request.method == "GET":
+                str = 'open'
+                msg = '重新等待接案'
+                p(request)
+                query.update(state=str, accepter='')
+                return render(request, 'forum/task_confirm.html',
+                              {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
+                               'msg': msg})
+            """
         elif state == 'wait_pickup':
             msg = 'Allready checked 您已經同意過'
         elif state == 'open':
-            msg = '還沒有人來取件'
+            msg = '等待取件'
         elif state != 'wait_confirm':
             msg = '無法操作'
     else:
         msg = 'Only task owner can agree 只有發案者可同意運送'
-    return render(request, 'forum/task_confirm.html',
-                  {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
-                   'msg': msg})
-
+    #return render(request, 'forum/task_confirm.html',{'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id, 'msg': msg})
+    return render(request, 'forum/task_confirm.html',locals())
 
 # accepter operate
 def received_task(request, question_url_id):
@@ -226,8 +244,6 @@ def received_task(request, question_url_id):
     else:
         msg = 'Only responsible person operatre 只有接案者可操作'
     return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
-
-
 # __________________ process flow end ____________________________________
 
 # __________________ operate function start ____________________________________
@@ -324,7 +340,7 @@ def score_task(request, question_url_id):
     #read post info and write into db
     if request.method == "POST":
         score_speed = request.POST['radio_score_speed']
-        score_service = request.POST['radio_score_speed']
+        score_service = request.POST['radio_score_service']
         score_all = request.POST['radio_score_all']
         score_desc = request.POST['desc']
         login_user = request.session['username']
@@ -376,52 +392,26 @@ def my_responsible_tasks(request):
         msg = '請先登入 please login first'
     return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
 # __________________ page frame end ____________________________________
+
+# __________________ score func start ____________________________________
 def user_info(request, user_name):
+    msg = ''
     username, send_times, send_score_service, send_score_speed, send_score_all = '', '', '', '', ''
-    accept_times, accept_score_service, accept_score_speed, accept_score_all = '', '', '', ''
+    accept_times, accept_score_service, accept_score_speed, accept_score_all, accepter_id = '', '', '', '', ''
     search_user_name = user_name
 
     if request.method == "POST":
-        search_user_name = request.POST['te_name']
-
-    query = Registration.objects.filter(username=search_user_name)
-    Accepter_id = list(query.values("id"))[0]['id']
-    #Find querydic from AccepterHistory
-    acc_query = AccepterHistory.objects.filter(Accepter_id=Accepter_id)
-    if acc_query.exists():
-        accept_times = len(list(acc_query.values("score_service")))
-        accept_score_service = acc_query.aggregate(Avg('score_service'))['score_service__avg']
-        accept_score_speed = acc_query.aggregate(Avg('score_speed'))['score_speed__avg']
-        accept_score_all = acc_query.aggregate(Avg('score_all'))['score_all__avg']
-
-        a = [accept_score_service, accept_score_speed, accept_score_all]
-        z = map(lambda x: round(float(x), 1), [y for y in a])
-        accept_score_service, accept_score_speed, accept_score_all = z
-    else:
-        accept_score_service, accept_score_speed, accept_score_all = '-', '-', '-'
-
+        keyin_search_user_name = request.POST['te_name']
+        user_name = keyin_search_user_name
+        search_user_name = keyin_search_user_name
+    try:
+        accept_score_service, accept_score_speed, accept_score_all, accept_times, accepter_id = read_accepter_score(search_user_name)
+        user_id = accepter_id #in this case, find same person accept_score and send_score
+        send_score_service, send_score_speed, send_score_all, send_times, user_id = read_user_score(search_user_name, user_id)
+    except:
+        user_name = '無此註冊用戶'
     # Find querydic from UserHistory
-    user_id = Accepter_id
-    user_query = UserHistory.objects.filter(user_id=user_id)
-    if user_query.exists():
-        send_times = len(list(user_query.values("score_service")))
-        send_score_service = user_query.aggregate(Avg('score_service'))['score_service__avg']
-        send_score_speed = user_query.aggregate(Avg('score_speed'))['score_speed__avg']
-        send_score_all = user_query.aggregate(Avg('score_all'))['score_all__avg']
-        a = [send_score_service, send_score_speed, send_score_all]
-        z = map(lambda x: round(float(x), 1), [y for y in a])
-        send_score_service, send_score_speed, send_score_all = z
-    else:
-        send_score_service, send_score_speed, send_score_all = '-', '-', '-'
-
-    """"
-    accept_score_service = list(acc_query.values("score_service"))[0]['score_service']
-    accept_score_speed = list(acc_query.values("score_speed"))[0]['score_speed']
-    accept_score_all = list(acc_query.values("score_all"))[0]['score_all']
-    
-    send_score_service = list(user_query.values("score_service"))[0]['score_service']
-    send_score_speed = list(user_query.values("score_speed"))[0]['score_speed']
-    send_score_all = list(user_query.values("score_all"))[0]['score_all']
+    """
     <h3>名稱name :  {{username}}</h3>
         <h4>送件-次數 : {{send_times}}</h4>
         <h4>送件-運送速度&準時 : {{send_score_service}}</h4>
@@ -436,6 +426,56 @@ def user_info(request, user_name):
     """
     return render(request, 'forum/user_info.html', locals())
 
+#for user_info and task_confirm
+def read_accepter_score(search_user_name, accepter_id=''):
+    user_exist = True if search_user_name != '' else False
+    if accepter_id =='':
+        query = Registration.objects.filter(username=search_user_name)
+        if query.exists():
+            accepter_id = list(query.values("id"))[0]['id']
+            acc_query = AccepterHistory.objects.filter(Accepter_id=accepter_id)
+        else:
+            user_exist = False
+    # Find querydic from AccepterHistory
+
+    if user_exist and acc_query.exists() :
+        accept_times = len(list(acc_query.values("score_service")))
+        accept_score_service = acc_query.aggregate(Avg('score_service'))['score_service__avg']
+        accept_score_speed = acc_query.aggregate(Avg('score_speed'))['score_speed__avg']
+        accept_score_all = acc_query.aggregate(Avg('score_all'))['score_all__avg']
+        accept_times =''
+        a = [accept_score_service, accept_score_speed, accept_score_all]
+        z = map(lambda x: round(float(x), 1), [y for y in a])
+        accept_score_service, accept_score_speed, accept_score_all = z
+    else:
+        accept_score_service, accept_score_speed, accept_score_all, accept_times = '-', '-', '-', '-'
+    return accept_score_service, accept_score_speed, accept_score_all, accept_times, accepter_id
+
+#for user_info
+def read_user_score(search_user_name,user_id=''):
+    user_exist = True if search_user_name != '' else False
+    if user_id =='':
+        query = Registration.objects.filter(username=search_user_name)
+        if query.exists():
+            user_id = list(query.values("id"))[0]['id']
+        else:
+            user_exist = False
+
+    user_query = UserHistory.objects.filter(user_id=user_id)
+    if user_exist and user_query.exists():
+        send_times = len(list(user_query.values("score_service")))
+        send_score_service = user_query.aggregate(Avg('score_service'))['score_service__avg']
+        send_score_speed = user_query.aggregate(Avg('score_speed'))['score_speed__avg']
+        send_score_all = user_query.aggregate(Avg('score_all'))['score_all__avg']
+        send_times = ''
+        a = [send_score_service, send_score_speed, send_score_all]
+        z = map(lambda x: round(float(x), 1), [y for y in a])
+        send_score_service, send_score_speed, send_score_all = z
+    else:
+        send_score_service, send_score_speed, send_score_all, send_times = '-', '-', '-', '-'
+    return send_score_service, send_score_speed, send_score_all, send_times, user_id
+
+# __________________ score func end ____________________________________
 # For INVEST fun:
 # print itself name and content
 def p(*vars):
