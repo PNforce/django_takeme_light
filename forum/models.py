@@ -40,6 +40,10 @@ class Registration(models.Model):
     activated = models.BooleanField(null=False, default=0)
     phone = models.CharField(max_length=15, null=True)
 
+    @property
+    def all_user_info(self):
+        return UserHistory.all()
+
     def __str__(self):
         return self.username
 
@@ -52,10 +56,13 @@ class UserHistory(models.Model):
     score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     task_id = models.CharField(max_length=7, blank=True)
+    #username = models.CharField(max_length=20, null=True)
+
     def __str__(self):
         return self.user
 
 class AccepterHistory(models.Model):
+    #Accepter = models.ForeignKey(Registration, related_name='AccepterHistorys', on_delete=models.CASCADE, blank=True)
     Accepter = models.ForeignKey(Registration, related_name='AccepterHistorys', on_delete=models.CASCADE, blank=True)
     score_speed = models.CharField(max_length=2, null=True)
     score_service = models.CharField(max_length=2, null=True)
@@ -64,5 +71,8 @@ class AccepterHistory(models.Model):
     score_desc = models.TextField(max_length=500, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     task_id = models.CharField(max_length=7, blank=True)
+    #accepter = models.CharField(max_length=20, blank=True)
+    registration = models.ForeignKey(to="Registration", to_field="id", on_delete=models.CASCADE)
+
     def __str__(self):
         return self.Accepter

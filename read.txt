@@ -50,6 +50,9 @@ https://blog.csdn.net/hpu_yly_bj/article/details/78939748
 新增table 需要手動輸入 https://www.itread01.com/content/1549520832.html
 migrations and migrate 可以從無產生sql，但無法增欄位
 foreighkey  https://www.youtube.com/watch?v=1RkipG5YQO0
+            https://www.jianshu.com/p/20e078a718ed
+           反查:一查多, 主表查询子表，即反向查询
+           https://www.jianshu.com/p/6da0aafd1337
 
 #註冊
 smtp core 在auth.py, 設定在 setting
@@ -81,3 +84,7 @@ https://blog.techbridge.cc/2018/06/15/python-decorator-%E5%85%A5%E9%96%80%E6%95%
 
 #Django 教學套餐
 https://ithelp.ithome.com.tw/users/20091495/ironman/844
+https://code.ziqiangxuetang.com/django/django-queryset-advance.html
+
+#效能提升
+Fastapi - flask效能3倍

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponseRedirect
 from .forms import QuestionPostForm, CommentForm, AddAcceptor
 from .models import QuestionPost, Comment, AccepterHistory, UserHistory, Registration
+from django.db.models import Avg
 from django.http.request import QueryDict
 
 import inspect
@@ -303,8 +304,6 @@ def score_task(request, question_url_id):
     accepter = list(query.values("accepter"))[0]['accepter']
     title = list(query.values("title"))[0]['title']
     state = list(query.values("title"))[0]['title']
-
-
     #if repeat score redirect to original page
     if username == login_user:
         history = AccepterHistory.objects.filter(id=question_url_id)
@@ -319,7 +318,6 @@ def score_task(request, question_url_id):
             print('repeat so redirect')
         return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
 
-
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
 
@@ -331,16 +329,15 @@ def score_task(request, question_url_id):
         score_desc = request.POST['desc']
         login_user = request.session['username']
         task_id = question_url_id
+        msg = '評分成功'
         #score each other
         if username == login_user:
             history = AccepterHistory.objects.filter(id=task_id) # can delete?
             res = Registration.objects.get(username=accepter)
-            msg = '評分成功'
             accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc,task_id=task_id, Accepter=res)
         elif accepter == login_user:
             res = Registration.objects.get(username=username)
             user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all,task_id=task_id, score_desc=score_desc, user=res)
-            msg = '評分成功'
     return render(request, 'forum/task_score.html', locals())
 
 # __________________ operate function end ____________________________________
@@ -387,25 +384,44 @@ def user_info(request, user_name):
     if request.method == "POST":
         search_user_name = request.POST['te_name']
 
-    #from username find Registration id(pk)
     query = Registration.objects.filter(username=search_user_name)
     Accepter_id = list(query.values("id"))[0]['id']
-
     #Find querydic from AccepterHistory
     acc_query = AccepterHistory.objects.filter(Accepter_id=Accepter_id)
-    accept_score_service = list(acc_query.values("score_service"))[0]['score_service']
-    accept_score_speed = list(acc_query.values("score_speed"))[0]['score_speed']
-    accept_score_all = list(acc_query.values("score_all"))[0]['score_all']
-    # BUG, if multi times how to sum and return?
+    if acc_query.exists():
+        accept_times = len(list(acc_query.values("score_service")))
+        accept_score_service = acc_query.aggregate(Avg('score_service'))['score_service__avg']
+        accept_score_speed = acc_query.aggregate(Avg('score_speed'))['score_speed__avg']
+        accept_score_all = acc_query.aggregate(Avg('score_all'))['score_all__avg']
+
+        a = [accept_score_service, accept_score_speed, accept_score_all]
+        z = map(lambda x: round(float(x), 1), [y for y in a])
+        accept_score_service, accept_score_speed, accept_score_all = z
+    else:
+        accept_score_service, accept_score_speed, accept_score_all = '-', '-', '-'
 
     # Find querydic from UserHistory
     user_id = Accepter_id
     user_query = UserHistory.objects.filter(user_id=user_id)
+    if user_query.exists():
+        send_times = len(list(user_query.values("score_service")))
+        send_score_service = user_query.aggregate(Avg('score_service'))['score_service__avg']
+        send_score_speed = user_query.aggregate(Avg('score_speed'))['score_speed__avg']
+        send_score_all = user_query.aggregate(Avg('score_all'))['score_all__avg']
+        a = [send_score_service, send_score_speed, send_score_all]
+        z = map(lambda x: round(float(x), 1), [y for y in a])
+        send_score_service, send_score_speed, send_score_all = z
+    else:
+        send_score_service, send_score_speed, send_score_all = '-', '-', '-'
+
+    """"
+    accept_score_service = list(acc_query.values("score_service"))[0]['score_service']
+    accept_score_speed = list(acc_query.values("score_speed"))[0]['score_speed']
+    accept_score_all = list(acc_query.values("score_all"))[0]['score_all']
+    
     send_score_service = list(user_query.values("score_service"))[0]['score_service']
     send_score_speed = list(user_query.values("score_speed"))[0]['score_speed']
     send_score_all = list(user_query.values("score_all"))[0]['score_all']
-
-    """
     <h3>名稱name :  {{username}}</h3>
         <h4>送件-次數 : {{send_times}}</h4>
         <h4>送件-運送速度&準時 : {{send_score_service}}</h4>
@@ -418,7 +434,6 @@ def user_info(request, user_name):
         <h4>接案-服務態度&回復速度 : {{accept_score_speed}}</h4>
         <h4>接案-整體評分 : {{accept_score_all}}</h4>
     """
-
     return render(request, 'forum/user_info.html', locals())
 
 # For INVEST fun:
