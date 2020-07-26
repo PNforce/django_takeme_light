@@ -2,7 +2,7 @@
 
 {% block task_accept %}
 <h3> Agree starting to delivery 同意取件人來取件 {{ request_id }}</h3>
-    <form method="POST"  class="form form-horizontal">
+    <form method="POST">
         {% csrf_token %}
         <h3>{{msg}}</h3>
         <table class="table table-hover">
@@ -25,9 +25,12 @@
                 <th>{{accepter}}</th>
                 <th>{{acceptmsg}}</th>
         </table>
-        <button type="submit" id="bt_task_confirm" class="save btn btn-default">accept 同意委託取件</button>
+        <button type="submit" id="bt_task_confirm" name="bt_task_confirm">accept 同意委託取件</button>
     </form>
-    <form method="GET"  class="form form-horizontal">
-            <button type="submit" id="bt_task_dont_confirm" name="bt_task_dont_confirm" class="save btn btn-default">不同意委託</button>
+    <form method="GET">
+            <button type="submit" id="bt_task_dont_confirm" name="bt_task_dont_confirm" >不同意委託</button>
     </form>
 {% endblock %}
+<!--
+class="form form-horizontal"
+-->

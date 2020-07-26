@@ -112,7 +112,7 @@ def can_do_atstate_bool(act, now_state):
     elif act == 'accept_task':
         if now_state == 'open':
             result = True
-    elif act == 'cancel_pickup':
+    elif act == 'cancel_task':
         if now_state == ('wait_confirm' or 'wait_pickup'):
             result = True
     elif act == 'received_task':
@@ -196,24 +196,25 @@ def confirm_task(request, question_url_id):
     #agree accepter come to pickup stuff
     if is_sameperson_bool(request, question_url_id) == True:
         if can_do_atstate_bool(act, state) == True:
-            if request.method == "POST":
+            if request.method == "POST" and ('bt_task_confirm' in request.POST):
                 str = 'wait_pickup'
                 query.update(state=str)
                 msg = '完成同意取件'
-                p(request)
+                # redirecr to mytask
                 return render(request, 'forum/task_confirm.html',
-                              {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
+                              {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': 'wait_pickup', 'title': title, 'id': id,
                                'msg': msg})
-            """
-            elif request.method == "GET":
+
+            if request.method == "GET" and ('bt_task_dont_confirm' in request.GET):
                 str = 'open'
                 msg = '重新等待接案'
-                p(request)
+                print('get')
+                print(request.GET)
                 query.update(state=str, accepter='')
                 return render(request, 'forum/task_confirm.html',
-                              {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id,
+                              {'accepter': '', 'acceptmsg': acceptmsg, 'state': 'open', 'title': title, 'id': id,
                                'msg': msg})
-            """
+
         elif state == 'wait_pickup':
             msg = 'Allready checked 您已經同意過'
         elif state == 'open':
@@ -223,7 +224,7 @@ def confirm_task(request, question_url_id):
     else:
         msg = 'Only task owner can agree 只有發案者可同意運送'
     #return render(request, 'forum/task_confirm.html',{'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id, 'msg': msg})
-    return render(request, 'forum/task_confirm.html',locals())
+    return render(request, 'forum/task_confirm.html', locals())
 
 # accepter operate
 def received_task(request, question_url_id):
@@ -296,7 +297,11 @@ def cancel_task(request, question_url_id):
     state = list(query.values("state"))[0]['state']
     act = 'cancel_task'
     if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
-        if can_do_atstate_bool(act, state):
+        print('cancel_ in ')
+        p(act)
+        p(state)
+        print(can_do_atstate_bool(act, state))
+        if can_do_atstate_bool(act, state)==True:
             title = list(query.values("title"))[0]['title']
             msg = title + ' 物品取消運送成功'
             s = 'open'
@@ -322,17 +327,17 @@ def score_task(request, question_url_id):
     state = list(query.values("title"))[0]['title']
     #if repeat score redirect to original page
     if username == login_user:
-        history = AccepterHistory.objects.filter(id=question_url_id)
+        history = AccepterHistory.objects.filter(task_id=question_url_id)
         if history.exists():
             print('repeat so redirect')
             #redirect('forum:my_request_tasks', msg=msg_repeat_score)
         #return render(request, 'forum/my_request_tasks.html', msg=msg_repeat)
-        return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
+            return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
     elif accepter == login_user:
-        history = UserHistory.objects.filter(id=question_url_id)
+        history = UserHistory.objects.filter(task_id=question_url_id)
         if history.exists():
             print('repeat so redirect')
-        return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
+            return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
 
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
@@ -354,6 +359,7 @@ def score_task(request, question_url_id):
         elif accepter == login_user:
             res = Registration.objects.get(username=username)
             user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all,task_id=task_id, score_desc=score_desc, user=res)
+
     return render(request, 'forum/task_score.html', locals())
 
 # __________________ operate function end ____________________________________
@@ -429,7 +435,7 @@ def user_info(request, user_name):
 #for user_info and task_confirm
 def read_accepter_score(search_user_name, accepter_id=''):
     user_exist = True if search_user_name != '' else False
-    if accepter_id =='':
+    if accepter_id == '':
         query = Registration.objects.filter(username=search_user_name)
         if query.exists():
             accepter_id = list(query.values("id"))[0]['id']
@@ -443,7 +449,7 @@ def read_accepter_score(search_user_name, accepter_id=''):
         accept_score_service = acc_query.aggregate(Avg('score_service'))['score_service__avg']
         accept_score_speed = acc_query.aggregate(Avg('score_speed'))['score_speed__avg']
         accept_score_all = acc_query.aggregate(Avg('score_all'))['score_all__avg']
-        accept_times =''
+        accept_times = ''
         a = [accept_score_service, accept_score_speed, accept_score_all]
         z = map(lambda x: round(float(x), 1), [y for y in a])
         accept_score_service, accept_score_speed, accept_score_all = z
@@ -454,7 +460,7 @@ def read_accepter_score(search_user_name, accepter_id=''):
 #for user_info
 def read_user_score(search_user_name,user_id=''):
     user_exist = True if search_user_name != '' else False
-    if user_id =='':
+    if user_id == '':
         query = Registration.objects.filter(username=search_user_name)
         if query.exists():
             user_id = list(query.values("id"))[0]['id']
