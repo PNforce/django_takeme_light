@@ -62,7 +62,6 @@ class UserHistory(models.Model):
         return self.user
 
 class AccepterHistory(models.Model):
-    #Accepter = models.ForeignKey(Registration, related_name='AccepterHistorys', on_delete=models.CASCADE, blank=True)
     Accepter = models.ForeignKey(Registration, related_name='AccepterHistorys', on_delete=models.CASCADE, blank=True)
     score_speed = models.CharField(max_length=2, null=True)
     score_service = models.CharField(max_length=2, null=True)
@@ -72,7 +71,7 @@ class AccepterHistory(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     task_id = models.CharField(max_length=7, blank=True)
     #accepter = models.CharField(max_length=20, blank=True)
-    registration = models.ForeignKey(to="Registration", to_field="id", on_delete=models.CASCADE)
+    #registration = models.ForeignKey(to="Registration", to_field="id", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.Accepter

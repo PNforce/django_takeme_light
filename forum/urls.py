@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^my_tasks/$', views.my_request_tasks, name='my_request_tasks'),
     url(r'^my_responsible/$', views.my_responsible_tasks, name='my_responsible_tasks'),
     url(r'^view/(?P<question_url_id>[0-9]+)/cancel/$', views.cancel_task, name='cancel_task'),
+    url(r'^view/(?P<question_url_id>[0-9]+)/shipping/$', views.shipping_task, name='shipping_task'),
     url(r'^view/(?P<question_url_id>[0-9]+)/received_task/$', views.received_task, name='received_task'),
     url(r'^login/$', auth.login, name='login'),
     url(r'^register/$', auth.register, name='register'),

@@ -25,7 +25,8 @@
         <td><a href="/forum/view/{{ item.accepter }}/user_info/"> {{ item.accepter }} </a></td>
         <td><a href="/forum/view/{{ item.id }}/">詳細 </a>
             {% if item.state == 'wait_confirm' or item.state == 'wait_confirm' %}|<a href="/forum/view/{{ item.id }}/cancel/"> 取消取件 </a> {% endif %}
-            {% if item.state == 'wait_pickup' or item.state == 'shipping' %}|<a href="/forum/view/{{ item.id }}/received_task/"> 物品送達 </a>{% endif %}
+            {% if item.state == 'wait_pickup' %}|<a href="/forum/view/{{ item.id }}/shipping/"> 開始運送 </a>{% endif %}
+            {% if item.state == 'shipping' %}|<a href="/forum/view/{{ item.id }}/received_task/"> 通知送達 </a>{% endif %}
             {% if item.state == 'arrived' %}|<a href="/forum/view/{{ item.id }}/score/"> 評分 </a> {% endif %}
         </td>
     </tr>

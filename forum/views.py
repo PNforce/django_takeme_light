@@ -101,10 +101,10 @@ def update_db(**kwargs):
 def can_do_atstate_bool(act, now_state):
     result = False
     if act == 'delete_task':
-        if now_state == ('open' or 'wait_confirm'):
+        if (now_state == 'open') or (now_state == 'wait_confirm'):
             result = True
     elif act == 'modify_task':
-        if now_state == ('open' or 'wait_confirm'):
+        if (now_state == 'open') or (now_state == 'wait_confirm'):
             result = True
     elif act == 'confirm_task':
         if now_state == 'wait_confirm':
@@ -113,10 +113,13 @@ def can_do_atstate_bool(act, now_state):
         if now_state == 'open':
             result = True
     elif act == 'cancel_task':
-        if now_state == ('wait_confirm' or 'wait_pickup'):
+        if (now_state == 'wait_confirm') or (now_state == 'wait_pickup'):
+            result = True
+    elif act == 'shipping_task':
+        if now_state == 'wait_pickup':
             result = True
     elif act == 'received_task':
-        if now_state == ('wait_pickup' or 'shipping'):
+        if (now_state == 'shipping') or (now_state == 'wait_pickup'):
             result = True
     elif act == 'score_task':
         if now_state == 'arrived':
@@ -125,11 +128,12 @@ def can_do_atstate_bool(act, now_state):
     return result
 
 # control the auth of CRUD actions
-def is_sameperson_bool(request, question_url_id):
+def is_sameperson_bool(request, question_url_id, username=''):
     # accepter ==user?
-    db_username = QuestionPost.objects.filter(pk=question_url_id).values("username")
-    a = list(db_username)
-    if str(request.session['username']) == a[0]['username']:
+    if username == '':
+        db_username = QuestionPost.objects.filter(pk=question_url_id).values("username")
+        username = list(db_username)[0]['username']
+    if str(request.session['username']) == username:
         result = True
     else:
         result = False
@@ -199,7 +203,7 @@ def confirm_task(request, question_url_id):
             if request.method == "POST" and ('bt_task_confirm' in request.POST):
                 str = 'wait_pickup'
                 query.update(state=str)
-                msg = '完成同意取件'
+                msg = '完成同意取件，請重點 "我的案件" 回上頁'
                 # redirecr to mytask
                 return render(request, 'forum/task_confirm.html',
                               {'accepter': accepter, 'acceptmsg': acceptmsg, 'state': 'wait_pickup', 'title': title, 'id': id,
@@ -207,7 +211,7 @@ def confirm_task(request, question_url_id):
 
             if request.method == "GET" and ('bt_task_dont_confirm' in request.GET):
                 str = 'open'
-                msg = '重新等待接案'
+                msg = '已取消，重新等待接案，請重點 "我的案件" 回上頁'
                 print('get')
                 print(request.GET)
                 query.update(state=str, accepter='')
@@ -226,14 +230,27 @@ def confirm_task(request, question_url_id):
     #return render(request, 'forum/task_confirm.html',{'accepter': accepter, 'acceptmsg': acceptmsg, 'state': state, 'title': title, 'id': id, 'msg': msg})
     return render(request, 'forum/task_confirm.html', locals())
 
+def shipping_task(request, question_url_id):
+    query = QuestionPost.objects.filter(id=question_url_id)
+    title = list(query.values("title"))[0]['title']
+    accepter = list(query.values("accepter"))[0]['accepter']
+    query.update(state='shipping')
+    msg = '{} 物品運送中'.format(title)
+    query_all = QuestionPost.objects.filter(accepter=accepter)
+    return render(request, 'forum/my_responsible_tasks.html', {'query': query_all, 'msg': msg})
+
 # accepter operate
 def received_task(request, question_url_id):
     query, msg, s = '', '', ''
     query = QuestionPost.objects.filter(id=question_url_id)
     state = list(query.values("state"))[0]['state']
     act = 'received_task'
-    if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
+    accepter = list(query.values("accepter"))[0]['accepter']
+    if accepter == request.session['username']:
+        p(state)
+        p(act)
         if can_do_atstate_bool(act, state):
+            print('pass can_do_atstate_bool received_task')
             title = list(query.values("title"))[0]['title']
             msg = title + ' 物品送達'
             s = 'arrived'
@@ -244,25 +261,29 @@ def received_task(request, question_url_id):
             msg = '無法操作'
     else:
         msg = 'Only responsible person operatre 只有接案者可操作'
-    return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
+    query_all = QuestionPost.objects.filter(accepter=accepter)
+    return render(request, 'forum/my_responsible_tasks.html', {'query': query_all, 'msg': msg})
 # __________________ process flow end ____________________________________
 
 # __________________ operate function start ____________________________________
 def delete_task(request, question_url_id):
-    msg = ''
-    query = QuestionPost.objects.all()
-    act = 'delete_task'
+    msg, qurey = '', ''
+    #query = QuestionPost.objects.all()
+    query = QuestionPost.objects.filter(id=question_url_id)
+    username = list(query.values("username"))[0]['username']
     state = list(query.values("state"))[0]['state']
-    if is_sameperson_bool(request, question_url_id) == True:
+    act = 'delete_task'
+    if is_sameperson_bool(request, question_url_id, username) == True:
         if can_do_atstate_bool(act, state) == True:
-            task = QuestionPost.objects.filter(id=question_url_id)
             # add pop-up warning
-            task.delete()
+            query.delete()
+            msg = '成功刪除'
         else:
-            msg == '只有在未接案階段，請先取消原有委託'
+            msg = '只有在未接案階段，請先取消原有委託'
     else:
         msg = 'Only delete your own task 無法刪除別人的委託'
-    return render(request, 'forum/my_request_tasks.html', {'query': query, 'msg': msg})
+    query_all = QuestionPost.objects.filter(username=username)
+    return render(request, 'forum/my_request_tasks.html', {'query': query_all, 'msg': msg})
 
 
 def modify_task(request, question_url_id):
@@ -295,29 +316,26 @@ def modify_task(request, question_url_id):
 def cancel_task(request, question_url_id):
     query = QuestionPost.objects.filter(id=question_url_id)
     state = list(query.values("state"))[0]['state']
+    accepter = list(query.values("accepter"))[0]['accepter']
     act = 'cancel_task'
-    if list(query.values("accepter"))[0]['accepter'] == request.session['username']:
-        print('cancel_ in ')
-        p(act)
-        p(state)
-        print(can_do_atstate_bool(act, state))
+    if accepter == request.session['username']:
         if can_do_atstate_bool(act, state)==True:
             title = list(query.values("title"))[0]['title']
             msg = title + ' 物品取消運送成功'
             s = 'open'
-            accepter = ''
-            query.update(state=s, accepter=accepter)
+            query.update(state=s, accepter='')
         else:
             msg = '無法取消，委託人已確認或已送達'
     else:
         msg = 'Only responsible person operatre 只有接案者可操作'
-    return render(request, 'forum/my_responsible_tasks.html', {'query': query, 'msg': msg})
+    query_all = QuestionPost.objects.filter(accepter=accepter)
+    return render(request, 'forum/my_responsible_tasks.html', {'query': query_all, 'msg': msg})
 
 
 def score_task(request, question_url_id):
     msg, key_isuser, username, accepter = '', '', '', ''
     login_user = request.session['username']
-    msg_repeat_score = '重複評分，回到上頁'
+    msg_repeat_score = '已做過評分'
 
     #load score page initial
     query = QuestionPost.objects.filter(id=question_url_id)
@@ -330,14 +348,14 @@ def score_task(request, question_url_id):
         history = AccepterHistory.objects.filter(task_id=question_url_id)
         if history.exists():
             print('repeat so redirect')
-            #redirect('forum:my_request_tasks', msg=msg_repeat_score)
-        #return render(request, 'forum/my_request_tasks.html', msg=msg_repeat)
-            return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
+            query_all = QuestionPost.objects.filter(accepter=login_user)
+            return render(request, 'forum/my_request_tasks.html', {'query': query_all, 'msg': msg_repeat_score})
     elif accepter == login_user:
         history = UserHistory.objects.filter(task_id=question_url_id)
         if history.exists():
             print('repeat so redirect')
-            return render(request, 'forum/my_request_tasks.html', {'query': '', 'msg': msg_repeat_score})
+            query_all = QuestionPost.objects.filter(accepter=login_user)
+            return render(request, 'forum/my_request_tasks.html', {'query': query_all, 'msg': msg_repeat_score})
 
     if is_sameperson_bool(request, question_url_id) == True:
         key_isuser = 'y'
@@ -353,14 +371,21 @@ def score_task(request, question_url_id):
         msg = '評分成功'
         #score each other
         if username == login_user:
-            history = AccepterHistory.objects.filter(id=task_id) # can delete?
+            #history = AccepterHistory.objects.filter(id=task_id) # can delete?
             res = Registration.objects.get(username=accepter)
             accepter_db = AccepterHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all, score_desc=score_desc,task_id=task_id, Accepter=res)
+            url = 'forum/my_request_tasks.html'
+            query_all = QuestionPost.objects.filter(username=username)
+            query.update(state='score')
         elif accepter == login_user:
             res = Registration.objects.get(username=username)
             user_db = UserHistory.objects.create(score_speed=score_speed, score_service=score_service, score_all=score_all,task_id=task_id, score_desc=score_desc, user=res)
+            url = 'forum/my_responsible_tasks.html'
+            query_all = QuestionPost.objects.filter(accepter=accepter)
 
-    return render(request, 'forum/task_score.html', locals())
+
+        return render(request, url, {'query': query_all, 'msg': msg})
+    return render(request, 'forum/task_score.html', locals()) #inital page
 
 # __________________ operate function end ____________________________________
 # __________________ page frame start ____________________________________

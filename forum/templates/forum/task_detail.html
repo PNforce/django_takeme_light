@@ -11,7 +11,8 @@
         }
 </style>
 <h4>{{msg}}</h4>
-<table>
+
+<table class="table table-bordered">
         {% for item in query %}
     <tr>
         <td>Date: </td>
@@ -42,16 +43,16 @@
         <th class="text-actually">{{ item.price }}</th>
     </tr>
     <tr>
-        <td>敘述desc: </td>
-        <th class="text-actually">{{ item.desc }}</th>
-    </tr>
-    <tr>
         <td>委託者Owner: </td>
         <th class="text-actually">{{item.username}}</th>
     </tr>
     <tr>
         <td>接案者Accepter: </td>
         <th class="text-actually">{{item.accepter}}</th>
+    </tr>
+    <tr>
+        <td>敘述desc: </td>
+        <th class="text-actually">{{ item.desc }}</th>
     </tr>
     <tr>
         <td>圖片Image: </td>

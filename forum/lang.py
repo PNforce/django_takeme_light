@@ -8,7 +8,8 @@ def showstatebylang(word, lang='zh-tw'):
             'wait_pickup': '待取貨',
             'shipping': '運送中',
             'arrived': '物品抵達',
-            'score': '互給評價'
+            'score': '互給評價',
+            'finish': '結案'
         }
         dic_base_html = {
 
